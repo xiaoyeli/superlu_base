@@ -1,0 +1,70 @@
+\section{dzsum1.c File Reference}
+\label{dzsum1_8c}\index{dzsum1.c@{dzsum1.c}}
+Takes sum of the absolute values of a complex vector and returns a double precision result. 
+
+{\tt \#include \char`\"{}slu\_\-dcomplex.h\char`\"{}}\par
+\subsection*{Defines}
+\begin{CompactItemize}
+\item 
+\#define {\bf CX}(I)~cx[(I)-1]\label{dzsum1_8c_5a76da95c549c41790389a76e12fdcb5}
+
+\end{CompactItemize}
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+double {\bf dzsum1\_\-} (int $\ast$n, doublecomplex $\ast$cx, int $\ast$incx)
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+Takes sum of the absolute values of a complex vector and returns a double precision result. 
+
+\small\begin{alltt}
+     -- LAPACK auxiliary routine (version 2.0) --   
+     Univ. of Tennessee, Univ. of California Berkeley, NAG Ltd.,   
+     Courant Institute, Argonne National Lab, and Rice University   
+     October 31, 1992   
+ \end{alltt}\normalsize 
+ 
+
+\subsection{Function Documentation}
+\index{dzsum1.c@{dzsum1.c}!dzsum1_@{dzsum1\_\-}}
+\index{dzsum1_@{dzsum1\_\-}!dzsum1.c@{dzsum1.c}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}double dzsum1\_\- (int $\ast$ {\em n}, doublecomplex $\ast$ {\em cx}, int $\ast$ {\em incx})}\label{dzsum1_8c_3fade9d45be0f00827565d6d0f37fe5d}
+
+
+\small\begin{alltt}
+    Purpose   
+    =======\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    DZSUM1 takes the sum of the absolute values of a complex   
+    vector and returns a double precision result.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    Based on DZASUM from the Level 1 BLAS.   
+    The change is to use the 'genuine' absolute value.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    Contributed by Nick Higham for use with ZLACON.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    Arguments   
+    =========\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    N       (input) INT   
+            The number of elements in the vector CX.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    CX      (input) COMPLEX*16 array, dimension (N)   
+            The vector whose elements will be summed.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    INCX    (input) INT   
+            The spacing between successive values of CX.  INCX > 0.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    ===================================================================== 
+\end{alltt}\normalsize 
+ 

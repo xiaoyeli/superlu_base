@@ -1,0 +1,447 @@
+@extract -b Typedef.inc
+/*! @file @(pre)fgmr.c
+ * \brief flexible GMRES from ITSOL developed by Yousef Saad.
+ */
+
+/* ITSOL COPYRIGHT
+
+Copyright (C) 2006, the University of Minnesota 
+
+ITSOL is free software; you can redistribute it and/or modify it under
+the terms of  the GNU General Public License as  published by the Free
+Software Foundation [version 2 of  the License, or any later version]
+For details, see 
+
+http://www.gnu.org/copyleft/gpl.html
+
+A copy of the GNU licencing agreement is attached to the ITSOL package
+in the file GNU.  For additional information contact the Free Software
+Foundation Inc., 65 Mass Ave, Cambridge, MA 02139, USA.
+
+DISCLAIMER
+----------
+
+This program  is distributed in the  hope that it will  be useful, but
+WITHOUT   ANY  WARRANTY;   without  even   the  implied   warranty  of
+MERCHANTABILITY  or FITNESS  FOR A  PARTICULAR PURPOSE.   See  the GNU
+General Public License for more details. 
+
+For information on ITSOL contact saad@cs.umn.edu
+*/
+
+#include "slu_@(pre)defs.h"
+
+#define  epsmac  1.0e-16
+
+@precision SINGLE DOUBLE
+extern @(type) @(pre)dot_(int *, @(type) [], int *, @(type) [], int *);
+extern @(type) @(pre)nrm2_(int *, @(type) [], int *);
+@precision SCOMPLEX DCOMPLEX
+extern void @(pre)dotc_(@(type) *, int *, @(type) [], int *, @(type) [], int *);
+extern @(mod_type) @(mod_pre)@(pre)nrm2_(int *, @(type) [], int *);
+@precision !
+
+
+int @(pre)fgmr(int n,
+     void (*@(pre)matvec) (@(type), @(type)[], @(type), @(type)[]),
+     void (*@(pre)psolve) (int, @(type)[], @(type)[]),
+     @(type) *rhs, @(type) *sol, double tol, int im, int *itmax, FILE * fits)
+{
+/*----------------------------------------------------------------------
+|                 *** Preconditioned FGMRES ***
++-----------------------------------------------------------------------
+| This is a simple version of the ARMS preconditioned FGMRES algorithm.
++-----------------------------------------------------------------------
+| Y. S. Dec. 2000. -- Apr. 2008
++-----------------------------------------------------------------------
+| on entry:
+|----------
+|
+| rhs     = real vector of length n containing the right hand side.
+| sol     = real vector of length n containing an initial guess to the
+|           solution on input.
+| tol     = tolerance for stopping iteration
+| im      = Krylov subspace dimension
+| (itmax) = max number of iterations allowed.
+| fits    = NULL: no output
+|        != NULL: file handle to output " resid vs time and its"
+|
+| on return:
+|----------
+| fgmr      int =  0 --> successful return.
+|           int =  1 --> convergence not achieved in itmax iterations.
+| sol     = contains an approximate solution (upon successful return).
+| itmax   = has changed. It now contains the number of steps required
+|           to converge --
++-----------------------------------------------------------------------
+| internal work arrays:
+|----------
+| vv      = work array of length [im+1][n] (used to store the Arnoldi
+|           basis)
+| hh      = work array of length [im][im+1] (Householder matrix)
+| z       = work array of length [im][n] to store preconditioned vectors
++-----------------------------------------------------------------------
+| subroutines called :
+| matvec - matrix-vector multiplication operation
+| psolve - (right) preconditionning operation
+|	   psolve can be a NULL pointer (GMRES without preconditioner)
++---------------------------------------------------------------------*/
+
+    int maxits = *itmax;
+    int i, i1, ii, j, k, k1, its, retval, i_1 = 1, i_2 = 2;
+    @(mod_type) beta, eps1 = 0.0, t, t0, gam;
+    @(type) **hh, *c, *s, *rs;
+    @(type) **vv, **z, tt;
+@precision SINGLE DOUBLE
+    @(type) zero = 0.0;
+    @(type) one = 1.0;
+@precision SCOMPLEX DCOMPLEX
+    @(type) zero = {0.0, 0.0};
+    @(type) one = {1.0, 0.0};
+    @(type) tt1, tt2;
+@precision !
+
+    its = 0;
+    vv = (@(type) **)SUPERLU_MALLOC((im + 1) * sizeof(@(type) *));
+    for (i = 0; i <= im; i++) vv[i] = @(type)Malloc(n);
+    z = (@(type) **)SUPERLU_MALLOC(im * sizeof(@(type) *));
+    hh = (@(type) **)SUPERLU_MALLOC(im * sizeof(@(type) *));
+    for (i = 0; i < im; i++)
+    {
+	hh[i] = @(type)Malloc(i + 2);
+	z[i] = @(type)Malloc(n);
+    }
+    c = @(type)Malloc(im);
+    s = @(type)Malloc(im);
+    rs = @(type)Malloc(im + 1);
+
+    /*---- outer loop starts here ----*/
+    do
+    {
+	/*---- compute initial residual vector ----*/
+	@(pre)matvec(one, sol, zero, vv[0]);
+@precision SINGLE DOUBLE
+	for (j = 0; j < n; j++)
+	    vv[0][j] = rhs[j] - vv[0][j];	/* vv[0]= initial residual */
+	beta = @(pre)nrm2_(&n, vv[0], &i_1);
+@precision SCOMPLEX DCOMPLEX
+	for (j = 0; j < n; j++)
+	    @(pre)_sub(&vv[0][j], &rhs[j], &vv[0][j]);	/* vv[0]= initial residual */
+	beta = @(mod_pre)@(pre)nrm2_(&n, vv[0], &i_1);
+@precision !
+
+	/*---- print info if fits != null ----*/
+	if (fits != NULL && its == 0)
+	    fprintf(fits, "%8d   %10.2e\n", its, beta);
+	/*if ( beta <= tol * dnrm2_(&n, rhs, &i_1) )*/
+@precision SINGLE DOUBLE
+	if ( !(beta > tol * @(pre)nrm2_(&n, rhs, &i_1)) )
+@precision SCOMPLEX DCOMPLEX
+	if ( !(beta > tol * @(mod_pre)@(pre)nrm2_(&n, rhs, &i_1)) )
+@precision !
+	    break;
+	t = 1.0 / beta;
+
+	/*---- normalize: vv[0] = vv[0] / beta ----*/
+	for (j = 0; j < n; j++)
+@precision SINGLE DOUBLE
+	    vv[0][j] = vv[0][j] * t;
+@precision SCOMPLEX DCOMPLEX
+	    @(pre)@(mod_pre)_mult(&vv[0][j], &vv[0][j], t);
+@precision !
+	if (its == 0)
+	    eps1 = tol * beta;
+
+	/*---- initialize 1-st term of rhs of hessenberg system ----*/
+@precision SINGLE DOUBLE
+	rs[0] = beta;
+@precision SCOMPLEX DCOMPLEX
+	rs[0].r = beta;
+	rs[0].i = 0.0;
+@precision !
+	for (i = 0; i < im; i++)
+	{
+	    its++;
+	    i1 = i + 1;
+
+	    /*------------------------------------------------------------
+	    |  (Right) Preconditioning Operation   z_{j} = M^{-1} v_{j}
+	    +-----------------------------------------------------------*/
+	    if (@(pre)psolve)
+		@(pre)psolve(n, z[i], vv[i]);
+	    else
+		@(pre)copy_(&n, vv[i], &i_1, z[i], &i_1);
+
+	    /*---- matvec operation w = A z_{j} = A M^{-1} v_{j} ----*/
+	    @(pre)matvec(one, z[i], zero, vv[i1]);
+
+	    /*------------------------------------------------------------
+	    |     modified gram - schmidt...
+	    |     h_{i,j} = (w,v_{i})
+	    |     w  = w - h_{i,j} v_{i}
+	    +------------------------------------------------------------*/
+@precision SINGLE DOUBLE
+	    t0 = @(pre)nrm2_(&n, vv[i1], &i_1);
+@precision SCOMPLEX DCOMPLEX
+	    t0 = @(mod_pre)@(pre)nrm2_(&n, vv[i1], &i_1);
+@precision !
+	    for (j = 0; j <= i; j++)
+	    {
+		@(type) negt;
+@precision SINGLE DOUBLE
+		tt = @(pre)dot_(&n, vv[j], &i_1, vv[i1], &i_1);
+		hh[i][j] = tt;
+		negt = -tt;
+@precision SCOMPLEX DCOMPLEX
+#if 0
+		@(pre)dotc_(&tt, &n, vv[j], &i_1, vv[i1], &i_1);
+#else
+		tt = zero;
+		for (k = 0; k < n; ++k) {
+		    @(pre)@(pre)_conj(&tt1, &vv[j][k]);
+		    @(pre)@(pre)_mult(&tt2, &tt1, &vv[i1][k]);
+		    @(pre)_add(&tt, &tt, &tt2);
+		}
+#endif
+		hh[i][j] = tt;
+		negt.r = -tt.r;
+		negt.i = -tt.i;
+@precision !
+		@(pre)axpy_(&n, &negt, vv[j], &i_1, vv[i1], &i_1);
+	    }
+
+	    /*---- h_{j+1,j} = ||w||_{2} ----*/
+@precision SINGLE DOUBLE
+	    t = @(pre)nrm2_(&n, vv[i1], &i_1);
+@precision SCOMPLEX DCOMPLEX
+	    t = @(mod_pre)@(pre)nrm2_(&n, vv[i1], &i_1);
+@precision !
+	    while (t < 0.5 * t0)
+	    {
+		t0 = t;
+		for (j = 0; j <= i; j++)
+		{
+		    @(type) negt;
+@precision SINGLE DOUBLE
+		    tt = @(pre)dot_(&n, vv[j], &i_1, vv[i1], &i_1);
+		    hh[i][j] += tt;
+		    negt = -tt;
+@precision SCOMPLEX DCOMPLEX
+#if 0
+		    @(pre)dotc_(&tt, &n, vv[j], &i_1, vv[i1], &i_1);
+#else
+   	            tt = zero;
+		    for (k = 0; k < n; ++k) {
+		        @(pre)@(pre)_conj(&tt1, &vv[j][k]);
+		        @(pre)@(pre)_mult(&tt2, &tt1, &vv[i1][k]);
+		        @(pre)_add(&tt, &tt, &tt2);
+		    }
+#endif
+		    @(pre)_add(&hh[i][j], &hh[i][j], &tt);
+		    negt.r = -tt.r;
+		    negt.i = -tt.i;
+@precision !
+		    @(pre)axpy_(&n, &negt, vv[j], &i_1, vv[i1], &i_1);
+		}
+@precision SINGLE DOUBLE
+		t = @(pre)nrm2_(&n, vv[i1], &i_1);
+@precision SCOMPLEX DCOMPLEX
+		t = @(mod_pre)@(pre)nrm2_(&n, vv[i1], &i_1);
+@precision !
+	    }
+
+@precision SINGLE DOUBLE
+	    hh[i][i1] = t;
+@precision SCOMPLEX DCOMPLEX
+	    hh[i][i1].r = t;
+	    hh[i][i1].i = 0.0;
+@precision !
+
+	    if (t != 0.0)
+	    {
+		/*---- v_{j+1} = w / h_{j+1,j} ----*/
+		t = 1.0 / t;
+		for (k = 0; k < n; k++)
+@precision SINGLE DOUBLE
+		    vv[i1][k] = vv[i1][k] * t;
+@precision SCOMPLEX DCOMPLEX
+	            @(pre)@(mod_pre)_mult(&vv[i1][k], &vv[i1][k], t);
+@precision !
+	    }
+	    /*---------------------------------------------------
+	    |     done with modified gram schimdt and arnoldi step
+	    |     now  update factorization of hh
+	    +--------------------------------------------------*/
+
+	    /*--------------------------------------------------------
+	    |   perform previous transformations  on i-th column of h
+	    +-------------------------------------------------------*/
+	    for (k = 1; k <= i; k++)
+	    {
+		k1 = k - 1;
+		tt = hh[i][k1];
+@precision SINGLE DOUBLE
+		hh[i][k1] = c[k1] * tt + s[k1] * hh[i][k];
+		hh[i][k] = -s[k1] * tt + c[k1] * hh[i][k];
+@precision SCOMPLEX DCOMPLEX
+                @(pre)@(pre)_mult(&tt1, &c[k1], &tt);
+                @(pre)@(pre)_mult(&tt2, &s[k1], &hh[i][k]);
+                @(pre)_add(&hh[i][k1], &tt1, &tt2);
+
+                @(pre)@(pre)_mult(&tt1, &s[k1], &tt);
+                @(pre)@(pre)_mult(&tt2, &c[k1], &hh[i][k]);
+                @(pre)_sub(&hh[i][k], &tt2, &tt1);
+@precision !
+	    }
+
+@precision SINGLE DOUBLE
+	    gam = sqrt(pow(hh[i][i], 2) + pow(hh[i][i1], 2));
+@precision SCOMPLEX DCOMPLEX
+	    gam = @(mod_pre)@(pre)nrm2_(&i_2, &hh[i][i], &i_1);
+@precision !
+@precision IGNORED compelx
+            @(pre)@(pre)_mult(&tt1, &hh[i][i], &hh[i][i]);
+            @(pre)@(pre)_mult(&tt2, &hh[i][i1], &hh[i][i1]);
+            @(pre)_add(&tt, &tt1, &tt2);
+	    gam = @(pre)_sqrt(&tt);
+@precision !
+
+	    /*---------------------------------------------------
+	    |     if gamma is zero then any small value will do
+	    |     affect only residual estimate
+	    +--------------------------------------------------*/
+	    /* if (gam == 0.0) gam = epsmac; */
+
+	    /*---- get next plane rotation ---*/
+	    if (gam == 0.0)
+	    {
+		c[i] = one;
+		s[i] = zero;
+	    }
+            else
+	    {
+@precision SINGLE DOUBLE
+		c[i] = hh[i][i] / gam;
+		s[i] = hh[i][i1] / gam;
+@precision SCOMPLEX DCOMPLEX
+                gam = 1.0 / gam;
+		@(pre)@(mod_pre)_mult(&c[i], &hh[i][i], gam);
+		@(pre)@(mod_pre)_mult(&s[i], &hh[i][i1], gam);
+@precision !
+	    }
+
+@precision SINGLE DOUBLE
+	    rs[i1] = -s[i] * rs[i];
+	    rs[i] = c[i] * rs[i];
+@precision SCOMPLEX DCOMPLEX
+	    @(pre)@(pre)_mult(&rs[i1], &s[i], &rs[i]);
+            rs[i1].r = -rs[i1].r;  rs[i1].i = -rs[i1].i;
+	    @(pre)@(pre)_mult(&rs[i], &c[i], &rs[i]);
+@precision !
+
+	    /*----------------------------------------------------
+	    |   determine residual norm and test for convergence
+	    +---------------------------------------------------*/
+@precision SINGLE DOUBLE
+	    hh[i][i] = c[i] * hh[i][i] + s[i] * hh[i][i1];
+	    beta = fabs(rs[i1]);
+@precision SCOMPLEX DCOMPLEX
+            @(pre)@(pre)_mult(&tt1, &c[i], &hh[i][i]);
+            @(pre)@(pre)_mult(&tt2, &s[i], &hh[i][i1]);
+            @(pre)_add(&hh[i][i], &tt1, &tt2);
+            beta = @(pre)_abs1(&rs[i1]);
+@precision !
+	    if (fits != NULL)
+		fprintf(fits, "%8d   %10.2e\n", its, beta);
+	    if (beta <= eps1 || its >= maxits)
+		break;
+	}
+
+	if (i == im) i--;
+
+	/*---- now compute solution. 1st, solve upper triangular system ----*/
+@precision SINGLE DOUBLE
+	rs[i] = rs[i] / hh[i][i];
+@precision SCOMPLEX DCOMPLEX
+	@(pre)_div(&rs[i], &rs[i], &hh[i][i]);
+@precision !
+
+	for (ii = 1; ii <= i; ii++)
+	{
+	    k = i - ii;
+	    k1 = k + 1;
+	    tt = rs[k];
+@precision SINGLE DOUBLE
+	    for (j = k1; j <= i; j++)
+		tt = tt - hh[j][k] * rs[j];
+	    rs[k] = tt / hh[k][k];
+@precision SCOMPLEX DCOMPLEX
+	    for (j = k1; j <= i; j++) {
+                @(pre)@(pre)_mult(&tt1, &hh[j][k], &rs[j]);
+		@(pre)_sub(&tt, &tt, &tt1);
+            }
+            @(pre)_div(&rs[k], &tt, &hh[k][k]);
+@precision !
+	}
+
+	/*---- linear combination of v[i]'s to get sol. ----*/
+	for (j = 0; j <= i; j++)
+	{
+	    tt = rs[j];
+@precision SINGLE DOUBLE
+	    for (k = 0; k < n; k++)
+		sol[k] += tt * z[j][k];
+@precision SCOMPLEX DCOMPLEX
+	    for (k = 0; k < n; k++) {
+                @(pre)@(pre)_mult(&tt1, &tt, &z[j][k]);
+		@(pre)_add(&sol[k], &sol[k], &tt1);
+            }
+@precision !
+	}
+
+	/* calculate the residual and output */
+	@(pre)matvec(one, sol, zero, vv[0]);
+	for (j = 0; j < n; j++)
+@precision SINGLE DOUBLE
+	    vv[0][j] = rhs[j] - vv[0][j];	/* vv[0]= initial residual */
+@precision SCOMPLEX DCOMPLEX
+	    @(pre)_sub(&vv[0][j], &rhs[j], &vv[0][j]);/* vv[0]= initial residual */
+@precision !
+
+	/*---- print info if fits != null ----*/
+@precision SINGLE DOUBLE
+	beta = @(pre)nrm2_(&n, vv[0], &i_1);
+@precision SCOMPLEX DCOMPLEX
+	beta = @(mod_pre)@(pre)nrm2_(&n, vv[0], &i_1);
+@precision !
+
+	/*---- restart outer loop if needed ----*/
+	/*if (beta >= eps1 / tol)*/
+	if ( !(beta < eps1 / tol) )
+	{
+	    its = maxits + 10;
+	    break;
+	}
+	if (beta <= eps1)
+	    break;
+    } while(its < maxits);
+
+    retval = (its >= maxits);
+    for (i = 0; i <= im; i++)
+	SUPERLU_FREE(vv[i]);
+    SUPERLU_FREE(vv);
+    for (i = 0; i < im; i++)
+    {
+	SUPERLU_FREE(hh[i]);
+	SUPERLU_FREE(z[i]);
+    }
+    SUPERLU_FREE(hh);
+    SUPERLU_FREE(z);
+    SUPERLU_FREE(c);
+    SUPERLU_FREE(s);
+    SUPERLU_FREE(rs);
+
+    *itmax = its;
+
+    return retval;
+} /*----end of fgmr ----*/

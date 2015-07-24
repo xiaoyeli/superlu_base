@@ -1,0 +1,16 @@
+#!/bin/sh
+# Usage: fsed 'string1' 'string2'
+for file in *.base
+do
+	egrep -s "$1" $file
+#	grep -q $1 $file
+	if [ $? -eq 0 ]; then
+#		sed -n '/'$1'/p' $file
+		tmpfile=${file}.t
+		echo $file $tmpfile
+		sed "s/$1/$2/g" $file > $tmpfile
+		mv $file ${file}.bak
+		mv $tmpfile $file
+		diff $file ${file}.bak
+	fi
+done

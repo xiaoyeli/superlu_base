@@ -1,0 +1,28 @@
+@beginskip
+	Filename:  extrall
+	Purpose :  for extracting all base files
+	Usage   :  extract -b extrall precision=<precision> 
+
+	@extract -b x.base -o s.c precision=single
+	@extract -b x.base -o d.c precision=double
+
+@endskip
+
+@extract -b ../Typedef.inc
+
+@precision SINGLE
+	@extract -b sp_xconvert.base -o ../../SuperLU/TESTING/sp_sconvert.c precision=single
+	@extract -b sp_xget02.base -o ../../SuperLU/TESTING/sp_sget02.c precision=single
+	@extract -b sp_xget04.base -o ../../SuperLU/TESTING/sp_sget04.c precision=single
+	@extract -b sp_xget07.base -o ../../SuperLU/TESTING/sp_sget07.c precision=single
+	@extract -b xdrive.base -o ../../SuperLU/TESTING/sdrive.c precision=single
+
+
+
+@precision DOUBLE
+	@extract -b sp_xconvert.base -o ../../SuperLU/TESTING/sp_dconvert.c precision=double
+	@extract -b sp_xget02.base -o ../../SuperLU/TESTING/sp_dget02.c precision=double
+	@extract -b sp_xget04.base -o ../../SuperLU/TESTING/sp_dget04.c precision=double
+	@extract -b sp_xget07.base -o ../../SuperLU/TESTING/sp_dget07.c precision=double
+	@extract -b xdrive.base -o ../../SuperLU/TESTING/ddrive.c precision=double
+

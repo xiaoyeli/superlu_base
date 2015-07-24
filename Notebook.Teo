@@ -1,0 +1,343 @@
+
+Complex progress
+~~~~~~~~~~~~~~~~
+
+
+[x]	xcolumn_bmod.base    
+[x]	xcolumn_dfs.base     - no changes
+[x]	xgscon.base          
+[x]	xgsequ.base          
+[x]	xgsrfs.base          - partially complete  (11/12)
+[x]	xgssv.base           
+[x]	xgssvx.base          
+[x]	xgstrf.base          
+[x]	xgstrs.base          
+[x]	xlacon.base          got zlacon from xiaoye
+[x]	xlangs.base          
+[x]	xlaqgs.base          
+[x]	xmemory.base         
+[ ]	xpanel_bmod.base     
+[x]	xpanel_dfs.base      
+[x]	xpivotL.base         
+[x]	xpivotgrowth.base    
+[x]	xpruneL.base         
+[x]	xreadmt.base         
+[x]	xsnode_bmod.base     10/17
+[x]	xsnode_dfs.base      - nothing to do
+[x]	xsp_blas2.base       
+[x]	xsp_blas3.base       
+[ ]	xsp_defs.h.base      
+[x]	xutil.base           
+
+
+@precision DOUBLE SINGLE
+
+@precision DCOMPLEX SCOMPLEX
+
+@precision !
+----------------------------------------------------------------------
+  Most up-to-date version in ~xiaoye/sparse/lu/SuperLU/
+                             ~xiaoye/sparse/lu/SuperLUBase/
+  
+  9/12/95: 64-bit arch, such as Alpha, and SGI R8000 ...
+  ~~~~~~~
+    1) SRC/xmemory.c
+       change all casting "(int)addr + c" into "(char*)addr + c", so that
+       the user_malloc() works properly.
+  
+    2) CBLAS/f2c.h
+       typedef long int integer --> typedef int integer
+       typedef long int logical --> typedef int logical                     
+  
+    3) TESTING/sp_sget04.c & sp_sget07.c
+       idamax_() --> isamax_()
+  
+    4) TESTING/MATGEN/xlatb4.c
+       remove s_copy() declaration
+  
+    5) SRC/slacon.c
+       idamax_() --> isamax_()
+  
+X    6) SRC/xgscon.c & xgsrfs.c
+       add the following line after slacon_() call     
+           if (kase == 0) break;
+  
+    7) SRC/Makefile: remove duplicate sp_ienv.o definition
+  
+  
+  9/15/95:
+  ~~~~~~~
+    1) ~teo/SuperLU/MATLAB/ is an older version, and has memory leakage.
+  
+  
+  9/16/95:
+  ~~~~~~~
+X    1) Memory expander has a bug for mem_type == LSUB.
+       Modify SRC/xcolumn_dfs.base, xsnode_dfs.base as follows:
+       if ( nextl > nzlmax ) then expand ...  -->
+       if ( nextl >= nzlmax ) then expand ...
+  
+  
+  9/18/95:
+  ~~~~~~~
+    1) clean up un-used variables/functions in SRC/util.c & util.h, including:
+           stat_relax
+           stat_col
+           stat_snode
+  
+    2) Add prototypes in SuperLUBase/SRC/xsp_defs.base:
+       extern void    Destroy_CompCol_Matrix(Matrix *);
+       extern void    Destroy_SuperNode_Matrix(Matrix *);
+       extern void    Destroy_CompCol_Permuted(Matrix *);
+  
+    3) Remove all argument names in function prototypes, in xsp_defs.base.
+  
+    4) John revised MATLAB/{trylusolve.m, trysuperlu, trytime.m}
+  
+    5) Upload to the ftp server.
+  
+  
+  10/3/95:
+  ~~~~~~~
+    1) In the top-level directory, each system has its own make include 
+       file make.$(PLAT). A generic make.inc is used.
+  
+    2) SuperLU/README is revised to reflect change of the make include file.
+  
+    3) All the include files SRC/*.h are wrapped with 
+           #ifndef __SUPERLU_INCLUDED
+       to allow for multiple inclusions but single occurence.
+  
+       Also revised the base file xsp_defs.h.base.
+  
+    4) Modified the following files so that xgstrs() log the floating point 
+       ops when one is solving the transpose system.
+           SuperLUBase/SRC/xgstrs.base
+           SuperLUBase/SRC/xsp_blas2.base
+           SuperLUBase/EXAMPLE/xsimple.base
+  
+           
+  10/9/95:
+  ~~~~~~~
+    1) Add routines SuperLUBase/EXAMPLE/xexpert.base, which call
+       the expert drivers xgssvx().
+  
+    2) In SuperLUBase/SRC/xsp_defs.h.base:
+       QuerySpace() --> xQuerySpace()
+  
+  10/18/95:
+  ~~~~~~~~
+    1) Revised SuperLUBase/SRC/xpivotL.base, per Barry's suggestion.
+   
+    2) Modified routine StatInit() in SuperLU/SRC/util.c, so it 
+       initializes all stat variables to 0.
+  
+----------------------------------------------------------------------
+Fri Sep 29 11:05:53 PDT 1995
+
+* decided to change name:  complex.[ch] -> dcomplex.[ch]  (no basefile)
+
+* changed SuperLUBase/Makefile to handle dcomplex.[ch]
+
+* added zd_mult() to complex.c
+	- may need zz_mult() later
+
+* yes!  structure assignment works.  See SuperLUBase/test/test.c
+
+* Q.  All the followings are real?
+ x amax,
+ x anorm,
+ ? bignum,
+ ? smlnum,	- returned by zlamch_
+ x colcnd,
+ x rowcnd,
+ x rcmax,
+ x rcmin;
+
+* Where to get zlamch ?
+
+----------------------------------------------------------------------
+Mon Oct 16 18:50:32 PDT 1995
+
+- xgstrf.base
+
+	- zwork ... doublecomplex
+	- *dense, *tempv, *a   ...   doublecomplex
+
+- xmemory.base
+
+	- changes to SetRWork  (check zmemory.c)
+
+
+
+----------------------------------------------------------------------
+Tue Oct 17 22:28:23 PDT 1995
+
+- xsnode_bmod.base
+
+	- alpha, beta  ...  real or complex?
+
+- xgstrf.base
+
+	- in function copy_to_ucol  ...  added complex zero (check .c file)
+
+- xgscon.base
+
+	- smlnum seems to be unused!!
+	- @(type) *g  is unused too!!
+
+----------------------------------------------------------------------
+Wed Oct 18 10:35:56 PDT 1995
+
+- xpivotL  ... using zabs1
+
+- xlangs
+
+	- xiaoye says to use EXACT zabs
+
+- xgscon
+
+	- removed variables:	smlnum, *g
+
+
+Todo:
+	o zlacon_  ... how to get complex version
+
+	o zsnode_bmod/zpanel_bmod
+
+		- alpha/beta complex, but WHAT VALUES ?
+
+
+
+----------------------------------------------------------------------
+Thu Oct 19 19:20:14 PDT 1995
+
+- xmemory
+
+	- in function dexpand, alpha's type is fixed to double
+
+----------------------------------------------------------------------
+Fri Oct 20 12:17:31 PDT 1995
+
+- xutil
+
+	- print_lu_col ... format changed for complex ucol[] and lusup[]
+
+	- xcheck_tempv modified
+
+	- xGenXtrue ... for complex, x[i] are set to 1.0 + 0i
+
+	- xFillRHS modified (imag part = 0 for both arguments)
+
+	- xinf_norm_error ... z_abs used
+
+	- xPrintPerf unchanged for now ... called from xdrive.c
+
+	- print_x_vec not used anywhere ; unchanged
+
+----------------------------------------------------------------------
+Sat Oct 21 08:10:35 PDT 1995
+
+- xlangs
+
+	- z_abs used here
+
+	- return type changed to real
+
+	- rwork changed to real
+
+- xgscon
+
+	- xrscl_() and xdlamch_() prototyped but not used (??)
+
+----------------------------------------------------------------------
+
+Sun Oct 29 08:38:21 PST 1995
+
+- xreadmt 
+	- scan_fmt
+
+- zlacon  -  got latest version of zlacon from xiaoye
+
+----------------------------------------------------------------------
+
+got updated copy of xsp_blas2.base ... next up - work on this file
+
+----------------------------------------------------------------------
+Sat Nov 11 14:11:27 PST 1995
+
+- xsp_blas2.base
+	- added  variable temp_comp for holding intermediate results
+	  during complex computation.
+	
+
+----------------------------------------------------------------------
+Sun Nov 12 09:04:26 PST 1995
+
+- xsp_blas2
+	- 2 copies gemv ... too much changes for complex code
+
+- xgsequ
+	- used z_abs ... z_abs1?
+
+- xlaqgs
+	- done
+
+- xsnode_dfs
+	- done
+
+- xgsrfs
+	- ndone = -1 + 0i   
+	- done = 1 + 0i     (correct?)
+	- used z_abs  L244  (correct?)
+	- work is REAL most of the time
+		BUT ... is COMPLEX when passed to 
+			xcopy_
+			sp_xgemv
+			xaxpy (?)
+			xlacon     (diff num of args)
+
+----------------------------------------------------------------------
+Mon Nov 13 11:44:04 PST 1995
+
+- xgsrfs
+	- work split into ---  work  (type) 		size 2n
+			  \
+			   \__ rwork  (mod_type)	size n
+
+
+	- iwork for complex reduced to size n
+
+- xgstrs
+	- copied updated copy from ~xiaoye/sparse/lu/SuperLUBase/
+
+----------------------------------------------------------------------
+Tue Nov 14 14:25:07 PST 1995
+
+- xpivotL
+	- temp split into ---  temp  (type)
+			  \
+			   \__ rtemp  (mod_type)
+
+- xpivotgrowth
+	- return type = REAL
+	- used z_abs1 (yes?)
+
+- xcolumn_bmod done
+	- not completely sure
+
+- xpanel_bmod
+
+
+------------------------------------
+Xiaoye's notes start here
+------------------------------------
+Sun Feb 11 14:05:25 PST 1996
+
+SuperLUBase/TESTING:
+
+- xdrive.base (to do):
+  
+      rwork should split into ---- rwork (mod_type) (size ??)
+                              \
+                               \__ wwork (type)     (size ??)

@@ -1,0 +1,71 @@
+\section{izmax1.c File Reference}
+\label{izmax1_8c}\index{izmax1.c@{izmax1.c}}
+Finds the index of the element whose real part has maximum absolute value. 
+
+{\tt \#include $<$math.h$>$}\par
+{\tt \#include \char`\"{}slu\_\-dcomplex.h\char`\"{}}\par
+\subsection*{Defines}
+\begin{CompactItemize}
+\item 
+\#define {\bf CX}(I)~cx[(I)-1]\label{izmax1_8c_5a76da95c549c41790389a76e12fdcb5}
+
+\end{CompactItemize}
+\subsection*{Functions}
+\begin{CompactItemize}
+\item 
+int {\bf izmax1\_\-} (int $\ast$n, doublecomplex $\ast$cx, int $\ast$incx)
+\end{CompactItemize}
+
+
+\subsection{Detailed Description}
+Finds the index of the element whose real part has maximum absolute value. 
+
+\small\begin{alltt}
+     -- LAPACK auxiliary routine (version 2.0) --   
+     Univ. of Tennessee, Univ. of California Berkeley, NAG Ltd.,   
+     Courant Institute, Argonne National Lab, and Rice University   
+     October 31, 1992   
+ \end{alltt}\normalsize 
+ 
+
+\subsection{Function Documentation}
+\index{izmax1.c@{izmax1.c}!izmax1_@{izmax1\_\-}}
+\index{izmax1_@{izmax1\_\-}!izmax1.c@{izmax1.c}}
+\subsubsection{\setlength{\rightskip}{0pt plus 5cm}int izmax1\_\- (int $\ast$ {\em n}, doublecomplex $\ast$ {\em cx}, int $\ast$ {\em incx})}\label{izmax1_8c_99d3cc85eec418b836a4949ead25c297}
+
+
+\small\begin{alltt}
+    Purpose   
+    =======\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    IZMAX1 finds the index of the element whose real part has maximum   
+    absolute value.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    Based on IZAMAX from Level 1 BLAS.   
+    The change is to use the 'genuine' absolute value.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    Contributed by Nick Higham for use with ZLACON.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    Arguments   
+    =========\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    N       (input) INT   
+            The number of elements in the vector CX.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    CX      (input) COMPLEX*16 array, dimension (N)   
+            The vector whose elements will be summed.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}    INCX    (input) INT   
+            The spacing between successive values of CX.  INCX >= 1.\end{alltt}\normalsize 
+
+
+\small\begin{alltt}   ===================================================================== 
+\end{alltt}\normalsize 
+ 

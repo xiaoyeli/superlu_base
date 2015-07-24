@@ -1,0 +1,384 @@
+SRC = ./SRC
+TST = ./TESTING
+EXM = ./EXAMPLE
+BLS = ./CBLAS
+TGTSRC = ../SuperLU/SRC
+TGTTST = ../SuperLU/TESTING
+TGTEXM = ../SuperLU/EXAMPLE
+TGTBLS = ../SuperLU/CBLAS
+
+all: single double dcomplex
+
+
+single: $(TGTSRC)/sgssv.c $(TGTSRC)/sgssvx.c $(TGTSRC)/scolumn_bmod.c \
+	$(TGTSRC)/sgstrf.c $(TGTSRC)/spanel_bmod.c $(TGTSRC)/ssnode_dfs.c \
+	$(TGTSRC)/scolumn_dfs.c $(TGTSRC)/sgstrs.c $(TGTSRC)/spanel_dfs.c \
+	$(TGTSRC)/ssp_blas2.c $(TGTSRC)/sgscon.c $(TGTSRC)/slacon.c \
+	$(TGTSRC)/spivotL.c $(TGTSRC)/ssp_blas3.c $(TGTSRC)/sgsequ.c \
+	$(TGTSRC)/spivotgrowth.c $(TGTSRC)/sutil.c \
+	$(TGTSRC)/sgsrfs.c $(TGTSRC)/slangs.c $(TGTSRC)/spruneL.c \
+	$(TGTSRC)/sgssv.c $(TGTSRC)/slaqgs.c $(TGTSRC)/sreadmt.c \
+	$(TGTSRC)/sgssvx.c $(TGTSRC)/smemory.c $(TGTSRC)/ssnode_bmod.c \
+	$(TGTSRC)/ssp_defs.h \
+	\
+	$(TGTTST)/sp_sconvert.c $(TGTTST)/sp_sget02.c \
+	$(TGTTST)/sp_sget04.c $(TGTTST)/sp_sget07.c $(TGTTST)/sdrive.c \
+	\
+	$(TGTEXM)/slinsol.c  $(TGTEXM)/slinsolx.c \
+	\
+	$(TGTBLS)/smyblas2.c
+
+
+$(TGTSRC)/sgssv.c:	$(SRC)/xgssv.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/sgssvx.c:	$(SRC)/xgssvx.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/sgstrf.c:	$(SRC)/xgstrf.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/sgstrs.c:	$(SRC)/xgstrs.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/sgscon.c:	$(SRC)/xgscon.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/smemory.c:	$(SRC)/xmemory.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/sgsequ.c:	$(SRC)/xgsequ.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/slaqgs.c:	$(SRC)/xlaqgs.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/sgsrfs.c:	$(SRC)/xgsrfs.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/slacon.c:	$(SRC)/xlacon.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/slangs.c:	$(SRC)/xlangs.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/scolumn_bmod.c:	$(SRC)/xcolumn_bmod.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/scolumn_dfs.c:	$(SRC)/xcolumn_dfs.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/spanel_bmod.c:	$(SRC)/xpanel_bmod.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/spanel_dfs.c:	$(SRC)/xpanel_dfs.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/spivotL.c:	$(SRC)/xpivotL.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/spivotgrowth.c:	$(SRC)/xpivotgrowth.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/spruneL.c:	$(SRC)/xpruneL.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/sreadmt.c:	$(SRC)/xreadmt.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/ssnode_bmod.c:	$(SRC)/xsnode_bmod.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/ssnode_dfs.c:	$(SRC)/xsnode_dfs.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/ssp_blas2.c:	$(SRC)/xsp_blas2.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/ssp_blas3.c:	$(SRC)/xsp_blas3.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/sutil.c:	$(SRC)/xutil.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/ssp_defs.h:	$(SRC)/xsp_defs.h.base
+	extract -b $? -o $@ precision=single
+
+$(TGTTST)/sp_sconvert.c:	$(TST)/sp_xconvert.base
+	extract -b $? -o $@ precision=single
+
+$(TGTTST)/sp_sget02.c:	$(TST)/sp_xget02.base
+	extract -b $? -o $@ precision=single
+
+$(TGTTST)/sp_sget04.c:	$(TST)/sp_xget04.base
+	extract -b $? -o $@ precision=single
+
+$(TGTTST)/sp_sget07.c:	$(TST)/sp_xget07.base
+	extract -b $? -o $@ precision=single
+
+$(TGTTST)/sdrive.c:	$(TST)/xdrive.base
+	extract -b $? -o $@ precision=single
+
+$(TGTEXM)/slinsol.c:	$(EXM)/xlinsol.base
+	extract -b $? -o $@ precision=single
+
+$(TGTEXM)/slinsolx.c:	$(EXM)/xlinsolx.base
+	extract -b $? -o $@ precision=single
+
+$(TGTBLS)/smyblas2.c:	$(BLS)/xmyblas2.base
+	extract -b $? -o $@ precision=single
+
+
+
+double: $(TGTSRC)/dgssv.c $(TGTSRC)/dgssvx.c $(TGTSRC)/dcolumn_bmod.c \
+	$(TGTSRC)/dgstrf.c $(TGTSRC)/dpanel_bmod.c $(TGTSRC)/dsnode_dfs.c \
+	$(TGTSRC)/dcolumn_dfs.c $(TGTSRC)/dgstrs.c $(TGTSRC)/dpanel_dfs.c \
+	$(TGTSRC)/dsp_blas2.c $(TGTSRC)/dgscon.c $(TGTSRC)/dlacon.c \
+	$(TGTSRC)/dpivotL.c $(TGTSRC)/dsp_blas3.c $(TGTSRC)/dgsequ.c \
+	$(TGTSRC)/dpivotgrowth.c $(TGTSRC)/dutil.c \
+	$(TGTSRC)/dgsrfs.c $(TGTSRC)/dlangs.c $(TGTSRC)/dpruneL.c \
+	$(TGTSRC)/dgssv.c $(TGTSRC)/dlaqgs.c $(TGTSRC)/dreadmt.c \
+	$(TGTSRC)/dgssvx.c $(TGTSRC)/dmemory.c $(TGTSRC)/dsnode_bmod.c \
+	$(TGTSRC)/dsp_defs.h \
+	\
+	$(TGTTST)/sp_dconvert.c $(TGTTST)/sp_dget02.c \
+	$(TGTTST)/sp_dget04.c $(TGTTST)/sp_dget07.c $(TGTTST)/ddrive.c \
+	\
+	$(TGTEXM)/dlinsol.c $(TGTEXM)/dlinsolx.c \
+	\
+	$(TGTBLS)/dmyblas2.c
+
+$(TGTSRC)/dgssv.c:	$(SRC)/xgssv.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dgssvx.c:	$(SRC)/xgssvx.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dgstrf.c:	$(SRC)/xgstrf.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dgstrs.c:	$(SRC)/xgstrs.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dgscon.c:	$(SRC)/xgscon.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dmemory.c:	$(SRC)/xmemory.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dgsequ.c:	$(SRC)/xgsequ.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dlaqgs.c:	$(SRC)/xlaqgs.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dgsrfs.c:	$(SRC)/xgsrfs.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dlacon.c:	$(SRC)/xlacon.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dlangs.c:	$(SRC)/xlangs.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dcolumn_bmod.c:	$(SRC)/xcolumn_bmod.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dcolumn_dfs.c:	$(SRC)/xcolumn_dfs.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dpanel_bmod.c:	$(SRC)/xpanel_bmod.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dpanel_dfs.c:	$(SRC)/xpanel_dfs.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dpivotL.c:	$(SRC)/xpivotL.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dpivotgrowth.c:	$(SRC)/xpivotgrowth.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dpruneL.c:	$(SRC)/xpruneL.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dreadmt.c:	$(SRC)/xreadmt.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dsnode_bmod.c:	$(SRC)/xsnode_bmod.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dsnode_dfs.c:	$(SRC)/xsnode_dfs.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dsp_blas2.c:	$(SRC)/xsp_blas2.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dsp_blas3.c:	$(SRC)/xsp_blas3.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dutil.c:	$(SRC)/xutil.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dsp_defs.h:	$(SRC)/xsp_defs.h.base
+	extract -b $? -o $@ precision=double
+
+
+$(TGTTST)/sp_dconvert.c:	$(TST)/sp_xconvert.base
+	extract -b $? -o $@ precision=double
+
+$(TGTTST)/sp_dget02.c:	$(TST)/sp_xget02.base
+	extract -b $? -o $@ precision=double
+
+$(TGTTST)/sp_dget04.c:	$(TST)/sp_xget04.base
+	extract -b $? -o $@ precision=double
+
+$(TGTTST)/sp_dget07.c:	$(TST)/sp_xget07.base
+	extract -b $? -o $@ precision=double
+
+$(TGTTST)/ddrive.c:	$(TST)/xdrive.base
+	extract -b $? -o $@ precision=double
+
+$(TGTEXM)/dlinsol.c:	$(EXM)/xlinsol.base
+	extract -b $? -o $@ precision=double
+
+$(TGTEXM)/dlinsolx.c:	$(EXM)/xlinsolx.base
+	extract -b $? -o $@ precision=double
+
+$(TGTBLS)/dmyblas2.c:	$(BLS)/xmyblas2.base
+	extract -b $? -o $@ precision=double
+
+
+
+
+
+dcomplex: $(TGTSRC)/zgssv.c $(TGTSRC)/zgssvx.c $(TGTSRC)/zcolumn_bmod.c \
+	  $(TGTSRC)/zgstrf.c $(TGTSRC)/zpanel_bmod.c $(TGTSRC)/zsnode_dfs.c \
+	  $(TGTSRC)/zcolumn_dfs.c $(TGTSRC)/zgstrs.c $(TGTSRC)/zpanel_dfs.c \
+	  $(TGTSRC)/zsp_blas2.c $(TGTSRC)/zgscon.c \
+	  $(TGTSRC)/zpivotL.c $(TGTSRC)/zsp_blas3.c $(TGTSRC)/zgsequ.c \
+	  $(TGTSRC)/zpivotgrowth.c $(TGTSRC)/zutil.c \
+	  $(TGTSRC)/zgsrfs.c $(TGTSRC)/zlangs.c $(TGTSRC)/zpruneL.c \
+	  $(TGTSRC)/zgssv.c $(TGTSRC)/zlaqgs.c $(TGTSRC)/zreadmt.c \
+	  $(TGTSRC)/zgssvx.c $(TGTSRC)/zmemory.c $(TGTSRC)/zsnode_bmod.c \
+	  $(TGTSRC)/zsp_defs.h \
+	  \
+	  $(TGTTST)/sp_zconvert.c $(TGTTST)/sp_zget02.c \
+	  $(TGTTST)/sp_zget04.c $(TGTTST)/sp_zget07.c $(TGTTST)/zdrive.c \
+	  \
+	  $(TGTEXM)/zlinsol.c \
+	  \
+	  $(TGTBLS)/zmyblas2.c \
+	  \
+	  $(TGTSRC)/dcomplex.h $(TGTSRC)/dcomplex.c \
+	  \
+	  $(TGTSRC)/dzsum1.c $(TGTSRC)/izmax1.c $(TGTSRC)/zlacon.c
+
+$(TGTSRC)/dcomplex.h:	$(SRC)/dcomplex.h
+	cp $? $@
+
+$(TGTSRC)/dcomplex.c:	$(SRC)/dcomplex.c
+	cp $? $@
+
+$(TGTSRC)/dzsum1.c:	$(SRC)/dzsum1.c
+	cp $? $@
+
+$(TGTSRC)/izmax1.c:	$(SRC)/izmax1.c
+	cp $? $@
+
+$(TGTSRC)/zlacon.c:	$(SRC)/zlacon.c
+	cp $? $@
+
+$(TGTSRC)/zgssv.c:	$(SRC)/xgssv.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zgssvx.c:	$(SRC)/xgssvx.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zgstrf.c:	$(SRC)/xgstrf.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zgstrs.c:	$(SRC)/xgstrs.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zgscon.c:	$(SRC)/xgscon.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zmemory.c:	$(SRC)/xmemory.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zgsequ.c:	$(SRC)/xgsequ.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zlaqgs.c:	$(SRC)/xlaqgs.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zgsrfs.c:	$(SRC)/xgsrfs.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zlangs.c:	$(SRC)/xlangs.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zcolumn_bmod.c:	$(SRC)/xcolumn_bmod.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zcolumn_dfs.c:	$(SRC)/xcolumn_dfs.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zpanel_bmod.c:	$(SRC)/xpanel_bmod.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zpanel_dfs.c:	$(SRC)/xpanel_dfs.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zpivotL.c:	$(SRC)/xpivotL.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zpivotgrowth.c:	$(SRC)/xpivotgrowth.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zpruneL.c:	$(SRC)/xpruneL.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zreadmt.c:	$(SRC)/xreadmt.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zsnode_bmod.c:	$(SRC)/xsnode_bmod.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zsnode_dfs.c:	$(SRC)/xsnode_dfs.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zsp_blas2.c:	$(SRC)/xsp_blas2.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zsp_blas3.c:	$(SRC)/xsp_blas3.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zutil.c:	$(SRC)/xutil.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zsp_defs.h:	$(SRC)/xsp_defs.h.base
+	extract -b $? -o $@ precision=dcomplex
+
+
+$(TGTTST)/sp_zconvert.c:	$(TST)/sp_xconvert.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTTST)/sp_zget02.c:	$(TST)/sp_xget02.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTTST)/sp_zget04.c:	$(TST)/sp_xget04.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTTST)/sp_zget07.c:	$(TST)/sp_xget07.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTTST)/zdrive.c:	$(TST)/xdrive.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTEXM)/zlinsol.c:	$(EXM)/xlinsol.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTBLS)/zmyblas2.c:	$(BLS)/xmyblas2.base
+	extract -b $? -o $@ precision=dcomplex
