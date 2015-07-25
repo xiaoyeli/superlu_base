@@ -3,10 +3,10 @@
  * \brief Estimates reciprocal of the condition number of a general matrix
  * 
  * <pre>
- * -- SuperLU routine (version 3.0) --
+ * -- SuperLU routine (version 5.0) --
  * Univ. of California Berkeley, Xerox Palo Alto Research Center,
  * and Lawrence Berkeley National Lab.
- * October 15, 2003
+ * July 25, 2015
  *
  * Modified from lapack routines @(PRE)GECON.
  * </pre> 
@@ -83,12 +83,13 @@ void
 @precision DOUBLE SINGLE
     int    *iwork;
 @precision !
+    int    isave[3];
     extern int @(pre)rscl_(int *, @(type) *, @(type) *, int *);
 
 @precision DOUBLE SINGLE
-    extern int @(pre)lacon_(int *, @(type) *, @(type) *, int *, @(type) *, int *);
+    extern int @(pre)lacon2_(int *, @(type) *, @(type) *, int *, @(type) *, int *, int []);
 @precision DCOMPLEX SCOMPLEX
-    extern int @(pre)lacon_(int *, @(type) *, @(type) *, @(mod_type) *, int *);
+    extern int @(pre)lacon2_(int *, @(type) *, @(type) *, @(mod_type) *, int *, int []);
 @precision !
 
     
@@ -136,9 +137,9 @@ void
 
     do {
 @precision DOUBLE SINGLE
-	@(pre)lacon_(&L->nrow, &work[L->nrow], &work[0], &iwork[0], &ainvnm, &kase);
+	@(pre)lacon2_(&L->nrow, &work[L->nrow], &work[0], &iwork[0], &ainvnm, &kase, isave);
 @precision DCOMPLEX SCOMPLEX
-	@(pre)lacon_(&L->nrow, &work[L->nrow], &work[0], &ainvnm, &kase);
+	@(pre)lacon2_(&L->nrow, &work[L->nrow], &work[0], &ainvnm, &kase, isave);
 @precision !
 
 	if (kase == 0) break;

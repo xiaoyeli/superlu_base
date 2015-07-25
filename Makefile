@@ -15,7 +15,7 @@ all: single double scomplex dcomplex
 single: $(TGTSRC)/sgssv.c $(TGTSRC)/sgssvx.c $(TGTSRC)/scolumn_bmod.c \
 	$(TGTSRC)/sgstrf.c $(TGTSRC)/spanel_bmod.c $(TGTSRC)/ssnode_dfs.c \
 	$(TGTSRC)/scolumn_dfs.c $(TGTSRC)/sgstrs.c $(TGTSRC)/spanel_dfs.c \
-	$(TGTSRC)/ssp_blas2.c $(TGTSRC)/sgscon.c $(TGTSRC)/slacon.c \
+	$(TGTSRC)/ssp_blas2.c $(TGTSRC)/sgscon.c $(TGTSRC)/slacon2.c \
 	$(TGTSRC)/spivotL.c $(TGTSRC)/ssp_blas3.c $(TGTSRC)/sgsequ.c \
 	$(TGTSRC)/spivotgrowth.c $(TGTSRC)/sutil.c \
 	$(TGTSRC)/sgsrfs.c $(TGTSRC)/slangs.c $(TGTSRC)/spruneL.c \
@@ -68,7 +68,7 @@ $(TGTSRC)/slaqgs.c:	$(SRC)/xlaqgs.base
 $(TGTSRC)/sgsrfs.c:	$(SRC)/xgsrfs.base
 	extract -b $? -o $@ precision=single
 
-$(TGTSRC)/slacon.c:	$(SRC)/xlacon.base
+$(TGTSRC)/slacon2.c:	$(SRC)/xlacon2.base
 	extract -b $? -o $@ precision=single
 
 $(TGTSRC)/slangs.c:	$(SRC)/xlangs.base
@@ -211,7 +211,7 @@ $(TGTFOR)/c_fortran_sgssv.c: $(FOR)/c_fortran_xgssv.base
 double: $(TGTSRC)/dgssv.c $(TGTSRC)/dgssvx.c $(TGTSRC)/dcolumn_bmod.c \
 	$(TGTSRC)/dgstrf.c $(TGTSRC)/dpanel_bmod.c $(TGTSRC)/dsnode_dfs.c \
 	$(TGTSRC)/dcolumn_dfs.c $(TGTSRC)/dgstrs.c $(TGTSRC)/dpanel_dfs.c \
-	$(TGTSRC)/dsp_blas2.c $(TGTSRC)/dgscon.c $(TGTSRC)/dlacon.c \
+	$(TGTSRC)/dsp_blas2.c $(TGTSRC)/dgscon.c $(TGTSRC)/dlacon2.c \
 	$(TGTSRC)/dpivotL.c $(TGTSRC)/dsp_blas3.c $(TGTSRC)/dgsequ.c \
 	$(TGTSRC)/dpivotgrowth.c $(TGTSRC)/dutil.c \
 	$(TGTSRC)/dgsrfs.c $(TGTSRC)/dlangs.c $(TGTSRC)/dpruneL.c \
@@ -264,7 +264,7 @@ $(TGTSRC)/dlaqgs.c:	$(SRC)/xlaqgs.base
 $(TGTSRC)/dgsrfs.c:	$(SRC)/xgsrfs.base
 	extract -b $? -o $@ precision=double
 
-$(TGTSRC)/dlacon.c:	$(SRC)/xlacon.base
+$(TGTSRC)/dlacon2.c:	$(SRC)/xlacon2.base
 	extract -b $? -o $@ precision=double
 
 $(TGTSRC)/dlangs.c:	$(SRC)/xlangs.base
@@ -418,7 +418,7 @@ scomplex: \
 	$(TGTSRC)/cmemory.c $(TGTSRC)/zsnode_bmod.c \
 	$(TGTSRC)/slu_cdefs.h $(TGTSRC)/ccopy_to_ucol.c \
 	$(TGTSRC)/scomplex.c $(TGTSRC)/slu_scomplex.h \
-	$(TGTSRC)/scsum1.c $(TGTSRC)/icmax1.c $(TGTSRC)/clacon.c \
+	$(TGTSRC)/scsum1.c $(TGTSRC)/icmax1.c $(TGTSRC)/clacon2.c \
 	\
 	$(TGTTST)/sp_cconvert.c $(TGTTST)/cgst01.c $(TGTTST)/cgst02.c \
 	$(TGTTST)/cgst04.c $(TGTTST)/cgst07.c $(TGTTST)/cdrive.c \
@@ -443,7 +443,7 @@ $(TGTSRC)/scsum1.c:	$(SRC)/scsum1.c
 $(TGTSRC)/icmax1.c:	$(SRC)/icmax1.c
 	cp $? $@
 
-$(TGTSRC)/clacon.c:	$(SRC)/xlacon.base
+$(TGTSRC)/clacon2.c:	$(SRC)/xlacon2.base
 	extract -b $? -o $@ precision=scomplex
 
 $(TGTSRC)/cgssv.c:	$(SRC)/xgssv.base
@@ -627,7 +627,7 @@ dcomplex: \
 	$(TGTSRC)/zmemory.c $(TGTSRC)/zsnode_bmod.c \
 	$(TGTSRC)/slu_zdefs.h $(TGTSRC)/zcopy_to_ucol.c \
 	$(TGTSRC)/dcomplex.c $(TGTSRC)/slu_dcomplex.h \
-	$(TGTSRC)/dzsum1.c $(TGTSRC)/izmax1.c $(TGTSRC)/zlacon.c \
+	$(TGTSRC)/dzsum1.c $(TGTSRC)/izmax1.c $(TGTSRC)/zlacon2.c \
 	$(TGTSRC)/zmyblas2.c \
 	\
 	$(TGTSRC)/zgsisx.c $(TGTSRC)/zgsitrf.c \
@@ -652,7 +652,7 @@ $(TGTSRC)/dzsum1.c:	$(SRC)/dzsum1.c
 $(TGTSRC)/izmax1.c:	$(SRC)/izmax1.c
 	cp $? $@
 
-$(TGTSRC)/zlacon.c:	$(SRC)/xlacon.base
+$(TGTSRC)/zlacon2.c:	$(SRC)/xlacon2.base
 	extract -b $? -o $@ precision=dcomplex
 
 $(TGTSRC)/zgssv.c:	$(SRC)/xgssv.base

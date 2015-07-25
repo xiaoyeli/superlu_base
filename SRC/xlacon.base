@@ -80,7 +80,6 @@ int
 
 {
 
-
     /* Table of constant values */
     int c__1 = 1;
 @precision SINGLE DOUBLE
@@ -98,7 +97,7 @@ int
     static int iter;
     static int jump, jlast;
     static @(mod_type) altsgn, estold;
-    static int i, j;
+    int i, j;
     @(mod_type) temp;
 @precision SCOMPLEX
     @(mod_type) safmin;

@@ -162,11 +162,12 @@ void
     @(type)   *work;
     @(mod_type)   *rwork;
     int      *iwork;
+    int      isave[3];
 
 @precision DOUBLE SINGLE
-    extern int @(pre)lacon_(int *, @(type) *, @(type) *, int *, @(mod_type) *, int *);
+    extern int @(pre)lacon2_(int *, @(type) *, @(type) *, int *, @(mod_type) *, int *, int []);
 @precision DCOMPLEX SCOMPLEX
-    extern int @(pre)lacon_(int *, @(type) *, @(type) *, @(mod_type) *, int *);
+    extern int @(pre)lacon2_(int *, @(type) *, @(type) *, @(mod_type) *, int *, int []);
 @precision !
 #ifdef _CRAY
     extern int @(SC_PRE)COPY(int *, @(type) *, int *, @(type) *, int *);
@@ -402,7 +403,7 @@ void
           is incremented by SAFE1 if the i-th component of   
           abs(op(A))*abs(X) + abs(B) is less than SAFE2.   
 
-          Use @(PRE)LACON to estimate the infinity-norm of the matrix   
+          Use @(PRE)LACON2 to estimate the infinity-norm of the matrix   
              inv(op(A)) * diag(W),   
           where W = abs(R) + NZ*EPS*( abs(op(A))*abs(X)+abs(B) ))) */
 	
@@ -459,8 +460,8 @@ void
 
 @precision DOUBLE SINGLE
 	do {
-	    @(pre)lacon_(&A->nrow, &work[A->nrow], work,
-		    &iwork[A->nrow], &ferr[j], &kase);
+	    @(pre)lacon2_(&A->nrow, &work[A->nrow], work,
+		    &iwork[A->nrow], &ferr[j], &kase, isave);
 	    if (kase == 0) break;
 
 	    if (kase == 1) {
@@ -489,8 +490,7 @@ void
 
 @precision DCOMPLEX SCOMPLEX
 	do {
-	    @(pre)lacon_(&A->nrow, &work[A->nrow], work,
-		    &ferr[j], &kase);
+	    @(pre)lacon2_(&A->nrow, &work[A->nrow], work, &ferr[j], &kase, isave);
 	    if (kase == 0) break;
 
 	    if (kase == 1) {
