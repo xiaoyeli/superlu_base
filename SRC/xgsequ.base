@@ -92,11 +92,7 @@ void
     int i, j, irow;
     @(mod_type) rcmin, rcmax;
     @(mod_type) bignum, smlnum;
-@precision DOUBLE DCOMPLEX
-    extern double dlamch_(char *);
-@precision SINGLE SCOMPLEX
-    extern float slamch_(char *);
-@precision !
+    extern @(mod_type) @(mod_pre)mach(char *);
     
     /* Test the input parameters. */
     *info = 0;
@@ -121,11 +117,7 @@ void
     Aval = Astore->nzval;
     
     /* Get machine constants. */
-@precision DOUBLE DCOMPLEX
-    smlnum = dlamch_("S");
-@precision SINGLE SCOMPLEX
-    smlnum = slamch_("S");
-@precision !
+    smlnum = @(mod_pre)mach("S");  /* slamch_("S"); */
     bignum = 1. / smlnum;
 
     /* Compute row scale factors. */

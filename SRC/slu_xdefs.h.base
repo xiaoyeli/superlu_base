@@ -243,7 +243,7 @@ extern int     sp_@(pre)gemm (char *, char *, int, int, int, @(type),
 			SuperMatrix *, @(type) *, int, @(type), 
 			@(type) *, int);
 extern         @(mod_type) @(mod_pre)lamch_(char *);
-
+extern         @(mod_type) @(mod_pre)mach(char *);   /* from C99 standard, in float.h */
 
 /*! \brief Memory-related */
 extern int     @(pre)LUMemInit (fact_t, void *, int, int, int, int, int,

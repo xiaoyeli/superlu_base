@@ -115,12 +115,7 @@ int @(pre)gst02(trans_t trans, int m, int n, int nrhs, SuperMatrix *A,
     }
 
     /* Exit with RESID = 1/EPS if ANORM = 0. */
-
-@precision SINGLE SCOMPLEX
-    eps = slamch_("Epsilon");
-@precision DOUBLE DCOMPLEX
-    eps = dlamch_("Epsilon");
-@precision !
+    eps = @(mod_pre)mach("Epsilon");
     anorm = @(pre)langs("1", A);
     if (anorm <= 0.) {
 	*resid = 1. / eps;

@@ -106,11 +106,7 @@ void
     Aval = Astore->nzval;
     
     /* Initialize LARGE and SMALL. */
-@precision DOUBLE DCOMPLEX
-    small = dlamch_("Safe minimum") / dlamch_("Precision");
-@precision SINGLE SCOMPLEX
-    small = slamch_("Safe minimum") / slamch_("Precision");
-@precision !
+    small = @(mod_pre)mach("Safe minimum") / @(mod_pre)mach("Precision");
     large = 1. / small;
 
     if (rowcnd >= THRESH && amax >= small && amax <= large) {

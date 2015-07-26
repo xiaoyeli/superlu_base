@@ -245,13 +245,9 @@ void
 
     /* NZ = maximum number of nonzero elements in each row of A, plus 1 */
     nz     = A->ncol + 1;
-@precision DOUBLE DCOMPLEX
-    eps    = dlamch_("Epsilon");
-    safmin = dlamch_("Safe minimum");
-@precision SINGLE SCOMPLEX
-    eps    = slamch_("Epsilon");
-    safmin = slamch_("Safe minimum");
-@precision !
+    eps    = @(mod_pre)mach("Epsilon");
+    safmin = @(mod_pre)mach("Safe minimum");
+
     /* Set SAFE1 essentially to be the underflow threshold times the
        number of additions in each row. */
     safe1  = nz * safmin;

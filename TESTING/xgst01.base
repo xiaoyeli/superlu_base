@@ -95,11 +95,7 @@ int @(pre)gst01(int m, int n, SuperMatrix *A, SuperMatrix *L,
         }
 	
     /* Determine EPS and the norm of A. */
-@precision SINGLE SCOMPLEX
-    eps = slamch_("Epsilon");
-@precision DOUBLE DCOMPLEX
-    eps = dlamch_("Epsilon");
-@precision !
+    eps = @(mod_pre)mach("Epsilon");
     anorm = @(pre)langs("1", A);
     cnorm = 0.;
 

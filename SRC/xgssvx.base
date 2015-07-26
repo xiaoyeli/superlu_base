@@ -390,7 +390,7 @@ void
     } else {
 	rowequ = lsame_(equed, "R") || lsame_(equed, "B");
 	colequ = lsame_(equed, "C") || lsame_(equed, "B");
-	smlnum = @(mod_pre)lamch_("Safe minimum");
+	smlnum = @(mod_pre)mach("Safe minimum");   /* lamch_("Safe minimum"); */
 	bignum = 1. / smlnum;
     }
 
@@ -636,7 +636,8 @@ printf("dgssvx: Fact=%4d, Trans=%4d, equed=%c\n",
 
     if ( options->ConditionNumber ) {
         /* Set INFO = A->ncol+1 if the matrix is singular to working precision. */
-        if ( *rcond < @(mod_pre)lamch_("E") ) *info = A->ncol + 1;
+        /*if ( *rcond < @(mod_pre)lamch_("E") ) *info = A->ncol + 1;*/
+        if ( *rcond < @(mod_pre)mach("E") ) *info = A->ncol + 1;
     }
 
     if ( nofact ) {

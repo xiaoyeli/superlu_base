@@ -65,11 +65,7 @@
 @precision !
    
     /* Get machine constants. */
-@precision DOUBLE DCOMPLEX
-    smlnum = dlamch_("S");
-@precision SINGLE SCOMPLEX
-    smlnum = slamch_("S");
-@precision !
+    smlnum = @(mod_pre)mach("S");
     rpg = 1. / smlnum;
 
     Astore = A->Store;

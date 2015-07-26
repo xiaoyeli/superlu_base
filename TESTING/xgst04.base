@@ -78,12 +78,7 @@ int @(pre)gst04(int n, int nrhs, @(type) *x, int ldx, @(type) *xact,
     }
 
     /* Exit with RESID = 1/EPS if RCOND is invalid. */
-
-@precision SINGLE SCOMPLEX
-    eps = slamch_("Epsilon");
-@precision DOUBLE DCOMPLEX
-    eps = dlamch_("Epsilon");
-@precision !
+    eps = @(mod_pre)mach("Epsilon");
     if ( rcond < 0. ) {
 	*resid = 1. / eps;
 	return 0;

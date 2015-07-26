@@ -124,13 +124,8 @@ int @(pre)gst07(trans_t trans, int n, int nrhs, SuperMatrix *A, @(type) *b,
 	return 0;
     }
 
-@precision SINGLE SCOMPLEX
-    eps = slamch_("Epsilon");
-    unfl = slamch_("Safe minimum");
-@precision DOUBLE DCOMPLEX
-    eps = dlamch_("Epsilon");
-    unfl = dlamch_("Safe minimum");
-@precision !
+    eps = @(mod_pre)mach("Epsilon");
+    unfl = @(mod_pre)mach("Safe minimum");
     ovfl   = 1. / unfl;
     notran = (trans == NOTRANS);
 
