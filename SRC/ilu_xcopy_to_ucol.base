@@ -67,7 +67,7 @@ ilu_@(pre)copy_to_ucol(
     int       *usub, *xusub;
     int       nzumax;
     int       m; /* number of entries in the nonzero U-segments */
-    register @(mod_type) d_max = 0.0, d_min = 1.0 / dmach_("Safe minimum");
+    register @(mod_type) d_max = 0.0, d_min = 1.0 / dmach("Safe minimum");
     register double tmp;
 @precision SINGLE DOUBLE
     @(type) zero = 0.0;

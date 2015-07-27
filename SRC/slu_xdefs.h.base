@@ -287,6 +287,32 @@ extern void    @(pre)print_lu_col(char *, int, int, int *, GlobalLU_t *);
 extern int     print_double_vec(char *, int, double *);
 extern void    check_tempv(int, @(type) *);
 
+/*! \brief BLAS */
+
+#ifdef USE_VENDOR_BLAS
+extern int @(pre)gemm_(const char*, const char*, const int*, const int*, const int*,
+                  const @(type)*, const @(type)*, const int*, const @(type)*,
+                  const int*, const @(type)*, @(type)*, const int*, int, int);
+extern int @(pre)trsv_(char*, char*, char*, int*, @(type)*, int*,
+                  @(type)*, int*, int, int, int);
+extern int @(pre)trsm_(char*, char*, char*, char*, int*, int*,
+                  @(type)*, @(type)*, int*, @(type)*,
+                  int*, int, int, int, int);
+extern int @(pre)gemv_(char *, int *, int *, @(type) *, @(type) *a, int *,
+                  @(type) *, int *, @(type) *, @(type) *, int *, int);
+#else
+extern int @(pre)gemm_(const char*, const char*, const int*, const int*, const int*,
+                  const @(type)*, const @(type)*, const int*, const @(type)*,
+		  const int*, const @(type)*, @(type)*, const int*);
+extern int @(pre)trsv_(char*, char*, char*, int*, @(type)*, int*,
+                  @(type)*, int*);
+extern int @(pre)trsm_(char*, char*, char*, char*, int*, int*,
+                  @(type)*, @(type)*, int*, @(type)*, int*);
+extern int @(pre)gemv_(char *, int *, int *, @(type) *, @(type) *a, int *,
+                  @(type) *, int *, @(type) *, @(type) *, int *);
+#endif
+
+
 #ifdef __cplusplus
   }
 #endif
