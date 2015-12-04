@@ -71,7 +71,6 @@
 
 #ifdef _CRAY
 #include <fortran.h>
-#include <string.h>
 #endif
 
 /* Define my integer type int_t */
@@ -82,34 +81,13 @@ typedef int int_t; /* default */
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <string.h>
 #include "slu_Cnames.h"
 #include "supermatrix.h"
 #include "slu_util.h"
 @precision DCOMPLEX SCOMPLEX
 #include "slu_@(mod_pre)complex.h"
 @precision !
-
-
-
-typedef struct {
-    int     *xsup;    /* supernode and column mapping */
-    int     *supno;   
-    int     *lsub;    /* compressed L subscripts */
-    int	    *xlsub;
-    @(type)  *lusup;   /* L supernodes */
-    int     *xlusup;
-    @(type)  *ucol;    /* U columns */
-    int     *usub;
-    int	    *xusub;
-    int     nzlmax;   /* current max size of lsub */
-    int     nzumax;   /*    "    "    "      ucol */
-    int     nzlumax;  /*    "    "    "     lusup */
-    int     n;        /* number of columns in the matrix */
-    LU_space_t MemModel; /* 0 - system malloc'd; 1 - user provided */
-    int     num_expansions;
-    ExpHeader *expanders; /* Array of pointers to 4 types of memory */
-    LU_stack_t stack;     /* use user supplied memory */
-} GlobalLU_t;
 
 
 /* -------- Prototypes -------- */
@@ -274,8 +252,6 @@ extern void    @(pre)CompRow_to_CompCol(int, int, int, @(type)*, int*, int*,
 		                   @(type) **, int **, int **);
 extern void    @(pre)fill (@(type) *, int, @(type));
 extern void    @(pre)inf_norm_error (int, SuperMatrix *, @(type) *);
-extern void    PrintPerf (SuperMatrix *, SuperMatrix *, mem_usage_t *,
-			 @(type), @(type), @(type) *, @(type) *, char *);
 extern @(mod_type)  @(mod_pre)qselect(int, @(mod_type) *, int);
 
 
@@ -285,22 +261,10 @@ extern void    @(pre)Print_SuperNode_Matrix(char *, SuperMatrix *);
 extern void    @(pre)Print_Dense_Matrix(char *, SuperMatrix *);
 extern void    @(pre)print_lu_col(char *, int, int, int *, GlobalLU_t *);
 extern int     print_double_vec(char *, int, double *);
-extern void    check_tempv(int, @(type) *);
+extern void    @(pre)check_tempv(int, @(type) *);
 
 /*! \brief BLAS */
 
-#ifdef USE_VENDOR_BLAS
-extern int @(pre)gemm_(const char*, const char*, const int*, const int*, const int*,
-                  const @(type)*, const @(type)*, const int*, const @(type)*,
-                  const int*, const @(type)*, @(type)*, const int*, int, int);
-extern int @(pre)trsv_(char*, char*, char*, int*, @(type)*, int*,
-                  @(type)*, int*, int, int, int);
-extern int @(pre)trsm_(char*, char*, char*, char*, int*, int*,
-                  @(type)*, @(type)*, int*, @(type)*,
-                  int*, int, int, int, int);
-extern int @(pre)gemv_(char *, int *, int *, @(type) *, @(type) *a, int *,
-                  @(type) *, int *, @(type) *, @(type) *, int *, int);
-#else
 extern int @(pre)gemm_(const char*, const char*, const int*, const int*, const int*,
                   const @(type)*, const @(type)*, const int*, const @(type)*,
 		  const int*, const @(type)*, @(type)*, const int*);
@@ -310,8 +274,6 @@ extern int @(pre)trsm_(char*, char*, char*, char*, int*, int*,
                   @(type)*, @(type)*, int*, @(type)*, int*);
 extern int @(pre)gemv_(char *, int *, int *, @(type) *, @(type) *a, int *,
                   @(type) *, int *, @(type) *, @(type) *, int *);
-#endif
-
 
 #ifdef __cplusplus
   }

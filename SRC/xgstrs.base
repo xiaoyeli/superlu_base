@@ -398,6 +398,10 @@ void
 {
     int i;
 
-    for (i = 0; i < n; i++) 
+    for (i = 0; i < n; i++)
+@precision DOUBLE SINGLE
   	printf("\t%d: %.4f\n", i, soln[i]);
+@precision DCOMPLEX SCOMPLEX
+  	printf("\t%d: %.4f\t%.4f\n", i, soln[i].r, soln[i].i);
+@precision !
 }

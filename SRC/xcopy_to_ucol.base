@@ -56,7 +56,7 @@ int
     supno   = Glu->supno;
     lsub    = Glu->lsub;
     xlsub   = Glu->xlsub;
-    ucol    = Glu->ucol;
+    ucol    = (@(type) *) Glu->ucol;
     usub    = Glu->usub;
     xusub   = Glu->xusub;
     nzumax  = Glu->nzumax;
@@ -80,7 +80,7 @@ int
 		while ( new_next > nzumax ) {
 		    if (mem_error = @(pre)LUMemXpand(jcol, nextu, UCOL, &nzumax, Glu))
 			return (mem_error);
-		    ucol = Glu->ucol;
+		    ucol = (@(type) *) Glu->ucol;
 		    if (mem_error = @(pre)LUMemXpand(jcol, nextu, USUB, &nzumax, Glu))
 			return (mem_error);
 		    usub = Glu->usub;

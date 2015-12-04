@@ -88,7 +88,6 @@ int @(pre)gst02(trans_t trans, int m, int n, int nrhs, SuperMatrix *A,
     char transc[1];
 
     /* Function prototypes */
-    extern int lsame_(char *, char *);
     extern @(mod_type) @(pre)langs(char *, SuperMatrix *);
 @precision SINGLE DOUBLE
     extern @(type) @(pre)asum_(int *, @(type) *, int *);

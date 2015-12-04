@@ -317,9 +317,9 @@ void
     supno   = Glu->supno;
     lsub    = Glu->lsub;
     xlsub   = Glu->xlsub;
-    lusup   = Glu->lusup;
+    lusup   = (@(type) *) Glu->lusup;
     xlusup  = Glu->xlusup;
-    ucol    = Glu->ucol;
+    ucol    = (@(type) *) Glu->ucol;
     usub    = Glu->usub;
     xusub   = Glu->xusub;
     
