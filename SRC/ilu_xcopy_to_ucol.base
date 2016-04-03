@@ -1,3 +1,13 @@
+/*! \file
+Copyright (c) 2003, The Regents of the University of California, through
+Lawrence Berkeley National Laboratory (subject to receipt of any required 
+approvals from U.S. Dept. of Energy) 
+
+All rights reserved. 
+
+The source code is distributed under BSD license, see the file License.txt
+at the top-level directory.
+*/
 @extract -b Typedef.inc
 /*! @file ilu_@(pre)copy_to_ucol.c
  * \brief Copy a computed column of U to the compressed data structure
@@ -67,7 +77,7 @@ ilu_@(pre)copy_to_ucol(
     int       *usub, *xusub;
     int       nzumax;
     int       m; /* number of entries in the nonzero U-segments */
-    register @(mod_type) d_max = 0.0, d_min = 1.0 / dmach("Safe minimum");
+    register @(mod_type) d_max = 0.0, d_min = 1.0 / @(mod_pre)mach("Safe minimum");
     register double tmp;
 @precision SINGLE DOUBLE
     @(type) zero = 0.0;

@@ -1,3 +1,13 @@
+/*! \file
+Copyright (c) 2003, The Regents of the University of California, through
+Lawrence Berkeley National Laboratory (subject to receipt of any required 
+approvals from U.S. Dept. of Energy) 
+
+All rights reserved. 
+
+The source code is distributed under BSD license, see the file License.txt
+at the top-level directory.
+*/
 @extract -b Typedef.inc
 /*! @file slu_@(pre)defs.h
  * \brief Header file for real operations
@@ -220,7 +230,6 @@ extern int     sp_@(pre)gemv (char *, @(type), SuperMatrix *, @(type) *,
 extern int     sp_@(pre)gemm (char *, char *, int, int, int, @(type),
 			SuperMatrix *, @(type) *, int, @(type), 
 			@(type) *, int);
-extern         @(mod_type) @(mod_pre)lamch_(char *);
 extern         @(mod_type) @(mod_pre)mach(char *);   /* from C99 standard, in float.h */
 
 /*! \brief Memory-related */

@@ -3,11 +3,16 @@ TST = ./TESTING
 EXM = ./EXAMPLE
 BLS = ./CBLAS
 FOR = ./FORTRAN
-TGTSRC = ../SuperLU/SRC
-TGTTST = ../SuperLU/TESTING
-TGTEXM = ../SuperLU/EXAMPLE
-TGTBLS = ../SuperLU/CBLAS
-TGTFOR = ../SuperLU/FORTRAN
+#TGTSRC = ../SuperLU/SRC
+#TGTTST = ../SuperLU/TESTING
+#TGTEXM = ../SuperLU/EXAMPLE
+#TGTBLS = ../SuperLU/CBLAS
+#TGTFOR = ../SuperLU/FORTRAN
+TGTSRC = ../superlu.git/SRC
+TGTTST = ../superlu.git/TESTING
+TGTEXM = ../superlu.git/EXAMPLE
+TGTBLS = ../superlu.git/CBLAS
+TGTFOR = ../superlu.git/FORTRAN
 
 all: single double scomplex dcomplex
 

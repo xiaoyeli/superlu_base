@@ -1,3 +1,13 @@
+/*! \file
+Copyright (c) 2003, The Regents of the University of California, through
+Lawrence Berkeley National Laboratory (subject to receipt of any required 
+approvals from U.S. Dept. of Energy) 
+
+All rights reserved. 
+
+The source code is distributed under BSD license, see the file License.txt
+at the top-level directory.
+*/
 @extract -b Typedef.inc
 /*
  * -- SuperLU routine (version 3.0) --
@@ -103,9 +113,9 @@ main(int argc, char *argv[])
     extern int @(pre)gst07(trans_t, int, int, SuperMatrix *, @(type) *, int,
                          @(type) *, int, @(type) *, int, 
                          @(mod_type) *, @(mod_type) *, @(mod_type) *);
-    extern int @(pre)latb4_(char *, int *, int *, int *, char *, int *, int *, 
+    extern int @(pre)latb4_slu(char *, int *, int *, int *, char *, int *, int *, 
 	               @(mod_type) *, int *, @(mod_type) *, char *);
-    extern int @(pre)latms_(int *, int *, char *, int *, char *, @(mod_type) *d,
+    extern int @(pre)latms_slu(int *, int *, char *, int *, char *, @(mod_type) *d,
                        int *, @(mod_type) *, @(mod_type) *, int *, int *,
                        char *, @(type) *, int *, @(type) *, int *);
     extern int sp_@(pre)convert(int, int, @(type) *, int, int, int,
@@ -216,10 +226,10 @@ main(int argc, char *argv[])
 	    
 	    /* Set up parameters with @(PRE)LATB4 and generate a test matrix
 	       with @(PRE)LATMS.  */
-	    @(pre)latb4_(path, &imat, &n, &n, sym, &kl, &ku, &anorm, &mode,
+	    @(pre)latb4_slu(path, &imat, &n, &n, sym, &kl, &ku, &anorm, &mode,
 		    &cndnum, dist);
 
-	    @(pre)latms_(&n, &n, dist, iseed, sym, &rwork[0], &mode, &cndnum,
+	    @(pre)latms_slu(&n, &n, dist, iseed, sym, &rwork[0], &mode, &cndnum,
 		    &anorm, &kl, &ku, "No packing", Afull, &lda,
 		    &wwork[0], &info);
 
