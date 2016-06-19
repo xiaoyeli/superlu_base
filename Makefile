@@ -3,11 +3,12 @@ TST = ./TESTING
 EXM = ./EXAMPLE
 BLS = ./CBLAS
 FOR = ./FORTRAN
-#TGTSRC = ../SuperLU/SRC
-#TGTTST = ../SuperLU/TESTING
-#TGTEXM = ../SuperLU/EXAMPLE
-#TGTBLS = ../SuperLU/CBLAS
-#TGTFOR = ../SuperLU/FORTRAN
+# TGTSRC = ../SuperLU/SRC
+# TGTTST = ../SuperLU/TESTING
+# TGTEXM = ../SuperLU/EXAMPLE
+# TGTBLS = ../SuperLU/CBLAS
+# TGTFOR = ../SuperLU/FORTRAN
+## Changed to github 2/3/2016
 TGTSRC = ../superlu.git/SRC
 TGTTST = ../superlu.git/TESTING
 TGTEXM = ../superlu.git/EXAMPLE
@@ -423,11 +424,10 @@ scomplex: \
 	$(TGTSRC)/cmemory.c $(TGTSRC)/zsnode_bmod.c \
 	$(TGTSRC)/slu_cdefs.h $(TGTSRC)/ccopy_to_ucol.c \
 	$(TGTSRC)/scomplex.c $(TGTSRC)/slu_scomplex.h \
-	$(TGTSRC)/scsum1.c $(TGTSRC)/icmax1.c $(TGTSRC)/clacon2.c \
+	$(TGTSRC)/clacon2.c $(TGTSRC)/cmyblas2.c \
 	\
 	$(TGTTST)/sp_cconvert.c $(TGTTST)/cgst01.c $(TGTTST)/cgst02.c \
 	$(TGTTST)/cgst04.c $(TGTTST)/cgst07.c $(TGTTST)/cdrive.c \
-	$(TGTSRC)/cmyblas2.c \
 	\
 	$(TGTSRC)/cgsisx.c $(TGTSRC)/cgsitrf.c \
 	$(TGTSRC)/cldperm.c $(TGTSRC)/cdiagonal.c \
@@ -442,11 +442,6 @@ scomplex: \
 	\
 	$(TGTFOR)/c_fortran_cgssv.c
 
-$(TGTSRC)/scsum1.c:	$(SRC)/scsum1.c
-	cp $? $@
-
-$(TGTSRC)/icmax1.c:	$(SRC)/icmax1.c
-	cp $? $@
 
 $(TGTSRC)/clacon2.c:	$(SRC)/xlacon2.base
 	extract -b $? -o $@ precision=scomplex
@@ -632,8 +627,7 @@ dcomplex: \
 	$(TGTSRC)/zmemory.c $(TGTSRC)/zsnode_bmod.c \
 	$(TGTSRC)/slu_zdefs.h $(TGTSRC)/zcopy_to_ucol.c \
 	$(TGTSRC)/dcomplex.c $(TGTSRC)/slu_dcomplex.h \
-	$(TGTSRC)/dzsum1.c $(TGTSRC)/izmax1.c $(TGTSRC)/zlacon2.c \
-	$(TGTSRC)/zmyblas2.c \
+	$(TGTSRC)/zlacon2.c $(TGTSRC)/zmyblas2.c \
 	\
 	$(TGTSRC)/zgsisx.c $(TGTSRC)/zgsitrf.c \
 	$(TGTSRC)/zldperm.c $(TGTSRC)/zdiagonal.c \
@@ -650,12 +644,6 @@ dcomplex: \
 	$(TGTEXM)/zitersol.c $(TGTEXM)/zitersol1.c $(TGTEXM)/zfgmr.c \
 	\
 	$(TGTFOR)/c_fortran_zgssv.c \
-
-$(TGTSRC)/dzsum1.c:	$(SRC)/dzsum1.c
-	cp $? $@
-
-$(TGTSRC)/izmax1.c:	$(SRC)/izmax1.c
-	cp $? $@
 
 $(TGTSRC)/zlacon2.c:	$(SRC)/xlacon2.base
 	extract -b $? -o $@ precision=dcomplex

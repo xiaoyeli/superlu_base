@@ -296,9 +296,9 @@ void
     for (k = 0; k < n; k++) swap[k] = iperm_c[k];
     iswap = (int *)intMalloc(n);
     for (k = 0; k < n; k++) iswap[k] = perm_c[k];
-    amax = (@(mod_type) *) @(mod_type)Malloc(panel_size);
+    amax = (@(mod_type) *) SUPERLU_MALLOC(panel_size * sizeof(@(mod_type)));
     if (drop_rule & DROP_SECONDARY)
-	@(mod_pre)work2 = (@(mod_type) *)@(mod_type)Malloc(n);
+	@(mod_pre)work2 = SUPERLU_MALLOC(n * sizeof(@(mod_type)));
     else
 	@(mod_pre)work2 = NULL;
 

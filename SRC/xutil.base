@@ -525,7 +525,7 @@ void
 
 
 
-
+int
 print_@(type)_vec(char *what, int n, @(type) *vec)
 {
     int i;
@@ -537,4 +537,3 @@ print_@(type)_vec(char *what, int n, @(type) *vec)
 @precision !
     return 0;
 }
-
