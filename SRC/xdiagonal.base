@@ -34,7 +34,7 @@ int @(pre)fill_diag(int n, NCformat *Astore)
 @precision SINGLE DOUBLE
     @(type) zero = 0.0;
 @precision SCOMPLEX DCOMPLEX
-    @(type) zero = {1.0, 0.0};
+    @(type) zero = {0.0, 0.0};
 @precision !
     int *rowind_new;
     int i, j, diag;
