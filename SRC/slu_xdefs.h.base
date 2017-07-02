@@ -257,6 +257,7 @@ extern int     ilu_@(pre)QuerySpace (SuperMatrix *, SuperMatrix *, mem_usage_t *
 extern void    @(pre)readhb(FILE *, int *, int *, int *, @(type) **, int **, int **);
 extern void    @(pre)readrb(int *, int *, int *, @(type) **, int **, int **);
 extern void    @(pre)readtriple(int *, int *, int *, @(type) **, int **, int **);
+extern void    @(pre)readMM(FILE *, int *, int *, int *, @(type) **, int **, int **);
 extern void    @(pre)CompRow_to_CompCol(int, int, int, @(type)*, int*, int*,
 		                   @(type) **, int **, int **);
 extern void    @(pre)fill (@(type) *, int, @(type));

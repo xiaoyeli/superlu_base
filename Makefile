@@ -26,7 +26,8 @@ single: $(TGTSRC)/sgssv.c $(TGTSRC)/sgssvx.c $(TGTSRC)/scolumn_bmod.c \
 	$(TGTSRC)/spivotgrowth.c $(TGTSRC)/sutil.c \
 	$(TGTSRC)/sgsrfs.c $(TGTSRC)/slangs.c $(TGTSRC)/spruneL.c \
 	$(TGTSRC)/sgssv.c $(TGTSRC)/slaqgs.c \
-        $(TGTSRC)/sreadhb.c $(TGTSRC)/sreadrb.c $(TGTSRC)/sreadtriple.c \
+        $(TGTSRC)/sreadhb.c $(TGTSRC)/sreadrb.c \
+	$(TGTSRC)/sreadtriple.c $(TGTSRC)/sreadMM.c \
 	$(TGTSRC)/sgssvx.c $(TGTSRC)/smemory.c $(TGTSRC)/ssnode_bmod.c \
 	$(TGTSRC)/slu_sdefs.h $(TGTSRC)/scopy_to_ucol.c \
 	$(TGTSRC)/smyblas2.c \
@@ -108,6 +109,9 @@ $(TGTSRC)/sreadrb.c:	$(SRC)/xreadrb.base
 	extract -b $? -o $@ precision=single
 
 $(TGTSRC)/sreadtriple.c: $(SRC)/xreadtriple.base
+	extract -b $? -o $@ precision=single
+
+$(TGTSRC)/sreadMM.c: $(SRC)/xreadMM.base
 	extract -b $? -o $@ precision=single
 
 $(TGTSRC)/ssnode_bmod.c:	$(SRC)/xsnode_bmod.base
@@ -222,7 +226,8 @@ double: $(TGTSRC)/dgssv.c $(TGTSRC)/dgssvx.c $(TGTSRC)/dcolumn_bmod.c \
 	$(TGTSRC)/dpivotgrowth.c $(TGTSRC)/dutil.c \
 	$(TGTSRC)/dgsrfs.c $(TGTSRC)/dlangs.c $(TGTSRC)/dpruneL.c \
 	$(TGTSRC)/dgssv.c $(TGTSRC)/dlaqgs.c \
-	$(TGTSRC)/dreadhb.c $(TGTSRC)/dreadrb.c $(TGTSRC)/dreadtriple.c \
+	$(TGTSRC)/dreadhb.c $(TGTSRC)/dreadrb.c \
+	$(TGTSRC)/dreadtriple.c $(TGTSRC)/dreadMM.c \
 	$(TGTSRC)/dgssvx.c $(TGTSRC)/dmemory.c $(TGTSRC)/dsnode_bmod.c \
 	$(TGTSRC)/slu_ddefs.h $(TGTSRC)/dcopy_to_ucol.c \
 	$(TGTSRC)/dmyblas2.c \
@@ -304,6 +309,9 @@ $(TGTSRC)/dreadrb.c:	$(SRC)/xreadrb.base
 	extract -b $? -o $@ precision=double
 
 $(TGTSRC)/dreadtriple.c: $(SRC)/xreadtriple.base
+	extract -b $? -o $@ precision=double
+
+$(TGTSRC)/dreadMM.c: $(SRC)/xreadMM.base
 	extract -b $? -o $@ precision=double
 
 $(TGTSRC)/dsnode_bmod.c:	$(SRC)/xsnode_bmod.base
@@ -420,7 +428,7 @@ scomplex: \
 	$(TGTSRC)/cpivotgrowth.c $(TGTSRC)/cutil.c \
 	$(TGTSRC)/cgsrfs.c $(TGTSRC)/clangs.c $(TGTSRC)/cpruneL.c \
 	$(TGTSRC)/claqgs.c $(TGTSRC)/creadhb.c \
-	$(TGTSRC)/creadrb.c $(TGTSRC)/creadtriple.c \
+	$(TGTSRC)/creadrb.c $(TGTSRC)/creadtriple.c $(TGTSRC)/creadMM.c \
 	$(TGTSRC)/cmemory.c $(TGTSRC)/zsnode_bmod.c \
 	$(TGTSRC)/slu_cdefs.h $(TGTSRC)/ccopy_to_ucol.c \
 	$(TGTSRC)/scomplex.c $(TGTSRC)/slu_scomplex.h \
@@ -513,6 +521,9 @@ $(TGTSRC)/creadrb.c: $(SRC)/xreadrb.base
 	extract -b $? -o $@ precision=scomplex
 
 $(TGTSRC)/creadtriple.c: $(SRC)/xreadtriple.base
+	extract -b $? -o $@ precision=scomplex
+
+$(TGTSRC)/creadMM.c: $(SRC)/xreadMM.base
 	extract -b $? -o $@ precision=scomplex
 
 $(TGTSRC)/cmemory.c: $(SRC)/xmemory.base
@@ -623,7 +634,7 @@ dcomplex: \
 	$(TGTSRC)/zpivotgrowth.c $(TGTSRC)/zutil.c \
 	$(TGTSRC)/zgsrfs.c $(TGTSRC)/zlangs.c $(TGTSRC)/zpruneL.c \
 	$(TGTSRC)/zlaqgs.c $(TGTSRC)/zreadhb.c \
-	$(TGTSRC)/zreadrb.c $(TGTSRC)/zreadtriple.c \
+	$(TGTSRC)/zreadrb.c $(TGTSRC)/zreadtriple.c $(TGTSRC)/zreadMM.c \
 	$(TGTSRC)/zmemory.c $(TGTSRC)/zsnode_bmod.c \
 	$(TGTSRC)/slu_zdefs.h $(TGTSRC)/zcopy_to_ucol.c \
 	$(TGTSRC)/dcomplex.c $(TGTSRC)/slu_dcomplex.h \
@@ -706,6 +717,9 @@ $(TGTSRC)/zreadrb.c:	$(SRC)/xreadrb.base
 	extract -b $? -o $@ precision=dcomplex
 
 $(TGTSRC)/zreadtriple.c: $(SRC)/xreadtriple.base
+	extract -b $? -o $@ precision=dcomplex
+
+$(TGTSRC)/zreadMM.c: $(SRC)/xreadMM.base
 	extract -b $? -o $@ precision=dcomplex
 
 $(TGTSRC)/zsnode_bmod.c:	$(SRC)/xsnode_bmod.base
