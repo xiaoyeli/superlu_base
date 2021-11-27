@@ -405,8 +405,6 @@ void
 @(pre)FillRHS(trans_t trans, int nrhs, @(type) *x, int ldx,
          SuperMatrix *A, SuperMatrix *B)
 {
-    NCformat *Astore;
-    @(type)   *Aval;
     DNformat *Bstore;
     @(type)   *rhs;
 @precision SINGLE DOUBLE
@@ -419,8 +417,8 @@ void
     int      ldc;
     char transc[1];
 
-    Astore = A->Store;
-    Aval   = (@(type) *) Astore->nzval;
+    //Astore = A->Store;
+    //Aval   = (@(type) *) Astore->nzval;
     Bstore = B->Store;
     rhs    = Bstore->nzval;
     ldc    = Bstore->lda;

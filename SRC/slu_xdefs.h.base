@@ -240,8 +240,8 @@ extern void    @(pre)SetRWork (int, int, @(type) *, @(type) **, @(type) **);
 extern void    @(pre)LUWorkFree (int *, @(type) *, GlobalLU_t *);
 extern int     @(pre)LUMemXpand (int, int, MemType, int *, GlobalLU_t *);
 
-extern @(type)  *@(type)Malloc(int);
-extern @(type)  *@(type)Calloc(int);
+extern @(type)  *@(type)Malloc(size_t);
+extern @(type)  *@(type)Calloc(size_t);
 @precision SCOMPLEX
 extern float  *floatMalloc(int);
 extern float  *floatCalloc(int);
@@ -284,6 +284,10 @@ extern int @(pre)trsm_(char*, char*, char*, char*, int*, int*,
                   @(type)*, @(type)*, int*, @(type)*, int*);
 extern int @(pre)gemv_(char *, int *, int *, @(type) *, @(type) *a, int *,
                   @(type) *, int *, @(type) *, @(type) *, int *);
+
+extern void @(pre)usolve(int, int, @(type)*, @(type)*);
+extern void @(pre)lsolve(int, int, @(type)*, @(type)*);
+extern void @(pre)matvec(int, int, int, @(type)*, @(type)*, @(type)*);
 
 #ifdef __cplusplus
   }

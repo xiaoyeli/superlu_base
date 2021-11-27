@@ -420,7 +420,6 @@ void
     int       i, j, info1;
     @(mod_type)    amax, anorm, bignum, smlnum, colcnd, rowcnd, rcmax, rcmin;
     int       relax, panel_size;
-    @(mod_type)    diag_pivot_thresh;
     double    t0;      /* temporary time */
     double    *utime;
 
@@ -516,7 +515,6 @@ void
     /* Initialization for factor parameters */
     panel_size = sp_ienv(1);
     relax      = sp_ienv(2);
-    diag_pivot_thresh = options->DiagPivotThresh;
 
     utime = stat->utime;
 
@@ -589,7 +587,7 @@ void
 	    utime[EQUIL] = SuperLU_timer_() - t0;
 	}
 
-	if ( !mc64 & equil ) { /* Only perform equilibration, no row perm */
+	if ( mc64==0 && equil ) { /* Only perform equilibration, no row perm */
 	    t0 = SuperLU_timer_();
 	    /* Compute row and column scalings to equilibrate the matrix A. */
 	    @(pre)gsequ(AA, R, C, &rowcnd, &colcnd, &amax, &info1);
@@ -678,7 +676,6 @@ void
     }
 
     if ( nrhs > 0 ) { /* Solve the system */
-        @(type) *rhs_work;
 
 	/* Scale and permute the right-hand side if equilibration
            and permutation from MC64 were performed. */

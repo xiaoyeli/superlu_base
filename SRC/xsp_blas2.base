@@ -28,13 +28,6 @@ at the top-level directory.
 
 #include "slu_@(pre)defs.h"
 
-/* 
- * Function prototypes 
- */
-void @(pre)usolve(int, int, @(type)*, @(type)*);
-void @(pre)lsolve(int, int, @(type)*, @(type)*);
-void @(pre)matvec(int, int, int, @(type)*, @(type)*, @(type)*);
-
 /*! \brief Solves one of the systems of equations A*x = b,   or   A'*x = b
  * 
  * <pre>
@@ -794,9 +787,8 @@ sp_@(pre)gemv(char *trans, @(type) alpha, SuperMatrix *A, @(type) *x,
     }
 
     /* Quick return if possible. */
-    if (A->nrow == 0 || A->ncol == 0 || 
-	@(pre)_eq(&alpha, &comp_zero) && 
-	@(pre)_eq(&beta, &comp_one))
+    if ( A->nrow == 0 || A->ncol == 0 || 
+	 (@(pre)_eq(&alpha, &comp_zero) && @(pre)_eq(&beta, &comp_one)) )
 	return 0;
 
     /* Set  LENX  and  LENY, the lengths of the vectors x and y, and set 

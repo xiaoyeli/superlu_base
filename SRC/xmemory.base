@@ -471,6 +471,7 @@ int
 	Glu->usub   = (int *) new_mem;
 	Glu->nzumax = *maxlen;
 	break;
+      default: break;
     }
     
     return 0;
@@ -676,26 +677,26 @@ void
 }
 
 
-@(type) *@(type)Malloc(int n)
+@(type) *@(type)Malloc(size_t n)
 {
     @(type) *buf;
-    buf = (@(type) *) SUPERLU_MALLOC((size_t)n * sizeof(@(type))); 
+    buf = (@(type) *) SUPERLU_MALLOC(n * (size_t) sizeof(@(type))); 
     if ( !buf ) {
 	ABORT("SUPERLU_MALLOC failed for buf in @(type)Malloc()\n");
     }
     return (buf);
 }
 
-@(type) *@(type)Calloc(int n)
+@(type) *@(type)Calloc(size_t n)
 {
     @(type) *buf;
-    register int i;
+    register size_t i;
 @precision SINGLE DOUBLE
     @(type) zero = 0.0;
 @precision SCOMPLEX DCOMPLEX
     @(type) zero = {0.0, 0.0};
 @precision !
-    buf = (@(type) *) SUPERLU_MALLOC((size_t)n * sizeof(@(type)));
+    buf = (@(type) *) SUPERLU_MALLOC(n * (size_t) sizeof(@(type)));
     if ( !buf ) {
 	ABORT("SUPERLU_MALLOC failed for buf in @(type)Calloc()\n");
     }

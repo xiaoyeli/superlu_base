@@ -38,13 +38,6 @@ at the top-level directory.
 #include <stdlib.h>
 #include "slu_@(pre)defs.h"
 
-/* 
- * Function prototypes 
- */
-void @(pre)lsolve(int, int, @(type) *, @(type) *);
-void @(pre)matvec(int, int, int, @(type) *, @(type) *, @(type) *);
-extern void @(pre)check_tempv();
-
 /*! \brief
  *
  * <pre>

@@ -30,12 +30,14 @@ extern void @(pre)copy_(int *, @(type) [], int *, @(type) [], int *);
 extern @(type) @(pre)asum_(int *, @(type) *, int *);
 extern @(type) @(pre)nrm2_(int *, @(type) *, int *);
 @precision SCOMPLEX DCOMPLEX
+extern void @(mod_pre)copy_(int *, @(mod_type) [], int *, @(mod_type) [], int *);
 extern @(mod_type) @(mod_pre)@(pre)asum_(int *, @(type) *, int *);
 extern @(mod_type) @(mod_pre)@(pre)nrm2_(int *, @(type) *, int *);
 @precision !
 extern double dnrm2_(int *, double [], int *);
 extern int i@(pre)amax_(int *, @(type) [], int *);
 
+#if 0
 static @(mod_type) *A;  /* used in _compare_ only */
 static int _compare_(const void *a, const void *b)
 {
@@ -44,6 +46,7 @@ static int _compare_(const void *a, const void *b)
     else if (A[*x] - A[*y] < 0.0) return 1;
     else return 0;
 }
+#endif
 
 /*! \brief
  * <pre>
@@ -92,7 +95,6 @@ int ilu_@(pre)drop_row(
     @(type) one = 1.0;
     @(type) none = -1.0;
 @precision SCOMPLEX DCOMPLEX
-    @(type) zero = {0.0, 0.0};
     @(type) one = {1.0, 0.0};
     @(type) none = {-1.0, 0.0};
 @precision !
