@@ -137,11 +137,7 @@ void @(pre)lsolve ( int ldm, int ncol, @(type) *M, @(type) *rhs )
  * in the rhs vector.
  */
 void
-@(pre)usolve ( ldm, ncol, M, rhs )
-int ldm;	/* in */
-int ncol;	/* in */
-@(type) *M;	/* in */
-@(type) *rhs;	/* modified */
+@(pre)usolve (int ldm, int ncol, @(type) *M, @(type) *rhs)
 {
     @(type) xj;
     int jcol, j, irow;
@@ -166,15 +162,10 @@ int ncol;	/* in */
  * 
  * The input matrix is M(1:nrow,1:ncol); The product is returned in Mxvec[].
  */
-void @(pre)matvec ( ldm, nrow, ncol, M, vec, Mxvec )
-
-int ldm;	/* in -- leading dimension of M */
-int nrow;	/* in */ 
-int ncol;	/* in */
-@(type) *M;	/* in */
-@(type) *vec;	/* in */
-@(type) *Mxvec;	/* in/out */
-
+void @(pre)matvec (
+   int ldm,	/* in -- leading dimension of M */
+   int nrow, int ncol, @(type) *M, @(type) *vec, @(type) *Mxvec
+   )
 {
     @(type) vi0, vi1, vi2, vi3, vi4, vi5, vi6, vi7;
     @(type) *M0;

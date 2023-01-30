@@ -101,6 +101,10 @@ int @(pre)fgmr(int n,
     @(type) tt1, tt2;
 @precision !
 
+    /* prototypes */
+    extern int @(pre)copy_(int *, @(type) *, int *, @(type) *, int *);
+    extern int @(pre)axpy_(int *, @(type) *, @(type) [], int *, @(type) [], int *);
+
     its = 0;
     vv = (@(type) **)SUPERLU_MALLOC((im + 1) * sizeof(@(type) *));
     for (i = 0; i <= im; i++) vv[i] = @(type)Malloc(n);

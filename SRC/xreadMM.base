@@ -238,10 +238,11 @@ void
 
 static void @(pre)readrhs(int m, @(type) *b)
 {
-    FILE *fp, *fopen();
-    int i;
+    FILE *fopen();
+    FILE *fp = fopen("b.dat", "r");
 
-    if ( !(fp = fopen("b.dat", "r")) ) {
+    int i;
+    if ( !fp ) {
         fprintf(stderr, "@(pre)readrhs: file does not exist\n");
 	exit(-1);
     }

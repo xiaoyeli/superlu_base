@@ -147,11 +147,12 @@ void
 
 void @(pre)readrhs(int m, @(type) *b)
 {
-    FILE *fp, *fopen();
+    FILE *fopen();
+    FILE *fp = fopen("b.dat", "r");
     int i;
     /*int j;*/
 
-    if ( !(fp = fopen("b.dat", "r")) ) {
+    if ( !fp ) {
         fprintf(stderr, "dreadrhs: file does not exist\n");
 	exit(-1);
     }
