@@ -148,7 +148,7 @@ void
 #define ITMAX 5
     
     /* Table of constant values */
-    int    ione = 1;
+    int    ione = 1, nrow = A->nrow;
 @precision DOUBLE SINGLE
     @(type) ndone = -1.;
     @(type) done = 1.;
@@ -239,9 +239,9 @@ void
     work = @(type)Malloc(2*A->nrow);
     rwork = (@(mod_type) *) SUPERLU_MALLOC( A->nrow * sizeof(@(mod_type)) );
 @precision DOUBLE SINGLE
-    iwork = intMalloc(2*A->nrow);
+    iwork = int32Malloc(2*A->nrow);
 @precision DCOMPLEX SCOMPLEX
-    iwork = intMalloc(A->nrow);
+    iwork = int32Malloc(A->nrow);
 @precision !
     if ( !work || !rwork || !iwork ) 
         ABORT("Malloc fails for work/rwork/iwork.");
@@ -303,9 +303,9 @@ void
 	       where op(A) = A, A**T, or A**H, depending on TRANS. */
 	    
 #ifdef _CRAY
-	    @(SC_PRE)COPY(&A->nrow, Bptr, &ione, work, &ione);
+	    @(SC_PRE)COPY(&nrow, Bptr, &ione, work, &ione);
 #else
-	    @(pre)copy_(&A->nrow, Bptr, &ione, work, &ione);
+	    @(pre)copy_(&nrow, Bptr, &ione, work, &ione);
 #endif
 	    sp_@(pre)gemv(transc, ndone, A, Xptr, ione, done, work, ione);
 
@@ -382,10 +382,10 @@ void
 		@(pre)gstrs (trans, L, U, perm_c, perm_r, &Bjcol, stat, info);
 		
 #ifdef _CRAY
-		@(SC_PRE)AXPY(&A->nrow, &done, work, &ione,
+		@(SC_PRE)AXPY(&nrow, &done, work, &ione,
 		       &Xmat[j*ldx], &ione);
 #else
-		@(pre)axpy_(&A->nrow, &done, work, &ione,
+		@(pre)axpy_(&nrow, &done, work, &ione,
 		       &Xmat[j*ldx], &ione);
 #endif
 		lstres = berr[j];
@@ -470,7 +470,7 @@ void
 
 @precision DOUBLE SINGLE
 	do {
-	    @(pre)lacon2_(&A->nrow, &work[A->nrow], work,
+	    @(pre)lacon2_(&nrow, &work[A->nrow], work,
 		    &iwork[A->nrow], &ferr[j], &kase, isave);
 	    if (kase == 0) break;
 
@@ -500,7 +500,7 @@ void
 
 @precision DCOMPLEX SCOMPLEX
 	do {
-	    @(pre)lacon2_(&A->nrow, &work[A->nrow], work, &ferr[j], &kase, isave);
+	    @(pre)lacon2_(&nrow, &work[A->nrow], work, &ferr[j], &kase, isave);
 	    if (kase == 0) break;
 
 	    if (kase == 1) {

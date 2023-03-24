@@ -83,9 +83,6 @@ at the top-level directory.
 #include <fortran.h>
 #endif
 
-/* Define my integer type int_t */
-typedef int int_t; /* default */
-
 #include <math.h>
 #include <limits.h>
 #include <stdio.h>
@@ -93,6 +90,7 @@ typedef int int_t; /* default */
 #include <stdint.h>
 #include <string.h>
 #include "slu_Cnames.h"
+#include "superlu_config.h"
 #include "supermatrix.h"
 #include "slu_util.h"
 @precision DCOMPLEX SCOMPLEX
@@ -109,64 +107,63 @@ extern "C" {
 /*! \brief Driver routines */
 extern void
 @(pre)gssv(superlu_options_t *, SuperMatrix *, int *, int *, SuperMatrix *,
-      SuperMatrix *, SuperMatrix *, SuperLUStat_t *, int *);
+      SuperMatrix *, SuperMatrix *, SuperLUStat_t *, int_t *info);
 extern void
 @(pre)gssvx(superlu_options_t *, SuperMatrix *, int *, int *, int *,
        char *, @(mod_type) *, @(mod_type) *, SuperMatrix *, SuperMatrix *,
-       void *, int, SuperMatrix *, SuperMatrix *,
+       void *, int_t lwork, SuperMatrix *, SuperMatrix *,
        @(mod_type) *, @(mod_type) *, @(mod_type) *, @(mod_type) *,
-       GlobalLU_t *, mem_usage_t *, SuperLUStat_t *, int *);
+       GlobalLU_t *, mem_usage_t *, SuperLUStat_t *, int_t *info);
     /* ILU */
 extern void
 @(pre)gsisv(superlu_options_t *, SuperMatrix *, int *, int *, SuperMatrix *,
       SuperMatrix *, SuperMatrix *, SuperLUStat_t *, int *);
 extern void
-@(pre)gsisx(superlu_options_t *, SuperMatrix *, int *, int *, int *,
-       char *, @(mod_type) *, @(mod_type) *, SuperMatrix *, SuperMatrix *,
-       void *, int, SuperMatrix *, SuperMatrix *, @(mod_type) *, @(mod_type) *,
-       GlobalLU_t *, mem_usage_t *, SuperLUStat_t *, int *);
+@(pre)gsisx(superlu_options_t *options, SuperMatrix *A, int *perm_c, int *perm_r,
+       int *etree, char *equed, @(mod_type) *R, @(mod_type) *C,
+       SuperMatrix *L, SuperMatrix *U, void *work, int_t lwork,
+       SuperMatrix *B, SuperMatrix *X, @(mod_type) *recip_pivot_growth, @(mod_type) *rcond,
+       GlobalLU_t *Glu, mem_usage_t *mem_usage, SuperLUStat_t *stat, int_t *info);
 
 
 /*! \brief Supernodal LU factor related */
 extern void
-@(pre)Create_CompCol_Matrix(SuperMatrix *, int, int, int, @(type) *,
-		       int *, int *, Stype_t, Dtype_t, Mtype_t);
+@(pre)Create_CompCol_Matrix(SuperMatrix *, int, int, int_t, @(type) *,
+		       int_t *, int_t *, Stype_t, Dtype_t, Mtype_t);
 extern void
-@(pre)Create_CompRow_Matrix(SuperMatrix *, int, int, int, @(type) *,
-		       int *, int *, Stype_t, Dtype_t, Mtype_t);
+@(pre)Create_CompRow_Matrix(SuperMatrix *, int, int, int_t, @(type) *,
+		       int_t *, int_t *, Stype_t, Dtype_t, Mtype_t);
+extern void @(pre)CompRow_to_CompCol(int, int, int_t, @(type)*, int_t*, int_t*,
+		                   @(type) **, int_t **, int_t **);
 extern void
 @(pre)Copy_CompCol_Matrix(SuperMatrix *, SuperMatrix *);
 extern void
 @(pre)Create_Dense_Matrix(SuperMatrix *, int, int, @(type) *, int,
 		     Stype_t, Dtype_t, Mtype_t);
 extern void
-@(pre)Create_SuperNode_Matrix(SuperMatrix *, int, int, int, @(type) *, 
-		         int *, int *, int *, int *, int *,
+@(pre)Create_SuperNode_Matrix(SuperMatrix *, int, int, int_t, @(type) *, 
+		         int_t *, int_t *, int_t *, int *, int *,
 			 Stype_t, Dtype_t, Mtype_t);
 extern void
 @(pre)Copy_Dense_Matrix(int, int, @(type) *, int, @(type) *, int);
 
-extern void    countnz (const int, int *, int *, int *, GlobalLU_t *);
-extern void    ilu_countnz (const int, int *, int *, GlobalLU_t *);
-extern void    fixupL (const int, const int *, GlobalLU_t *);
-
-extern void    @(pre)allocateA (int, int, @(type) **, int **, int **);
+extern void    @(pre)allocateA (int, int_t, @(type) **, int_t **, int_t **);
 extern void    @(pre)gstrf (superlu_options_t*, SuperMatrix*,
-                       int, int, int*, void *, int, int *, int *, 
+                       int, int, int*, void *, int_t, int *, int *, 
                        SuperMatrix *, SuperMatrix *, GlobalLU_t *,
-		       SuperLUStat_t*, int *);
-extern int     @(pre)snode_dfs (const int, const int, const int *, const int *,
-			     const int *, int *, int *, GlobalLU_t *);
+		       SuperLUStat_t*, int_t *info);
+extern int_t   @(pre)snode_dfs (const int, const int, const int_t *, const int_t *,
+			     const int_t *, int_t *, int *, GlobalLU_t *);
 extern int     @(pre)snode_bmod (const int, const int, const int, @(type) *,
                               @(type) *, GlobalLU_t *, SuperLUStat_t*);
 extern void    @(pre)panel_dfs (const int, const int, const int, SuperMatrix *,
 			   int *, int *, @(type) *, int *, int *, int *,
-			   int *, int *, int *, int *, GlobalLU_t *);
+			   int_t *, int *, int *, int_t *, GlobalLU_t *);
 extern void    @(pre)panel_bmod (const int, const int, const int, const int,
                            @(type) *, @(type) *, int *, int *,
 			   GlobalLU_t *, SuperLUStat_t*);
 extern int     @(pre)column_dfs (const int, const int, int *, int *, int *, int *,
-			   int *, int *, int *, int *, int *, GlobalLU_t *);
+			   int *, int_t *, int *, int *, int_t *, GlobalLU_t *);
 extern int     @(pre)column_bmod (const int, const int, @(type) *,
 			   @(type) *, int *, int *, int,
                            GlobalLU_t *, SuperLUStat_t*);
@@ -175,8 +172,8 @@ extern int     @(pre)copy_to_ucol (int, int, int *, int *, int *,
 extern int     @(pre)pivotL (const int, const double, int *, int *, 
                          int *, int *, int *, GlobalLU_t *, SuperLUStat_t*);
 extern void    @(pre)pruneL (const int, const int *, const int, const int,
-			  const int *, const int *, int *, GlobalLU_t *);
-extern void    @(pre)readmt (int *, int *, int *, @(type) **, int **, int **);
+			  const int *, const int *, int_t *, GlobalLU_t *);
+extern void    @(pre)readmt (int *, int *, int_t *, @(type) **, int_t **, int_t **);
 extern void    @(pre)GenXtrue (int, int, @(type) *, int);
 extern void    @(pre)FillRHS (trans_t, int, @(type) *, int, SuperMatrix *,
 			  SuperMatrix *);
@@ -184,18 +181,17 @@ extern void    @(pre)gstrs (trans_t, SuperMatrix *, SuperMatrix *, int *, int *,
                         SuperMatrix *, SuperLUStat_t*, int *);
 /* ILU */
 extern void    @(pre)gsitrf (superlu_options_t*, SuperMatrix*, int, int, int*,
-		        void *, int, int *, int *, SuperMatrix *, SuperMatrix *,
-                        GlobalLU_t *, SuperLUStat_t*, int *);
-extern int     @(pre)ldperm(int, int, int, int [], int [], @(type) [],
+		        void *, int_t, int *, int *, SuperMatrix *, SuperMatrix *,
+                        GlobalLU_t *, SuperLUStat_t*, int_t *info);
+extern int     @(pre)ldperm(int, int, int_t, int_t [], int_t [], @(type) [],
                         int [],	@(mod_type) [], @(mod_type) []);
-extern int     ilu_@(pre)snode_dfs (const int, const int, const int *, const int *,
-			       const int *, int *, GlobalLU_t *);
+extern int     ilu_@(pre)snode_dfs (const int, const int, const int_t *, const int_t *,
+			       const int_t *, int *, GlobalLU_t *);
 extern void    ilu_@(pre)panel_dfs (const int, const int, const int, SuperMatrix *,
 			       int *, int *, @(type) *, @(mod_type) *, int *, int *,
-			       int *, int *, int *, int *, GlobalLU_t *);
+			       int *, int *, int *, int_t *, GlobalLU_t *);
 extern int     ilu_@(pre)column_dfs (const int, const int, int *, int *, int *,
-				int *, int *, int *, int *, int *,
-				GlobalLU_t *);
+				int *, int *, int *, int *, int_t *, GlobalLU_t *);
 extern int     ilu_@(pre)copy_to_ucol (int, int, int *, int *, int *,
                                   @(type) *, int, milu_t, double, int,
                                   @(type) *, int *, GlobalLU_t *, @(mod_type) *);
@@ -233,12 +229,12 @@ extern int     sp_@(pre)gemm (char *, char *, int, int, int, @(type),
 extern         @(mod_type) @(mod_pre)mach(char *);   /* from C99 standard, in float.h */
 
 /*! \brief Memory-related */
-extern int     @(pre)LUMemInit (fact_t, void *, int, int, int, int, int,
+extern int_t   @(pre)LUMemInit (fact_t, void *, int_t, int, int, int_t, int,
                             @(mod_type), SuperMatrix *, SuperMatrix *,
                             GlobalLU_t *, int **, @(type) **);
 extern void    @(pre)SetRWork (int, int, @(type) *, @(type) **, @(type) **);
 extern void    @(pre)LUWorkFree (int *, @(type) *, GlobalLU_t *);
-extern int     @(pre)LUMemXpand (int, int, MemType, int *, GlobalLU_t *);
+extern int_t   @(pre)LUMemXpand (int, int_t, MemType, int_t *, GlobalLU_t *);
 
 extern @(type)  *@(type)Malloc(size_t);
 extern @(type)  *@(type)Calloc(size_t);
@@ -249,17 +245,15 @@ extern float  *floatCalloc(int);
 extern double  *doubleMalloc(int);
 extern double  *doubleCalloc(int);
 @precision !
-extern int     @(pre)memory_usage(const int, const int, const int, const int);
+extern int_t   @(pre)memory_usage(const int_t, const int_t, const int_t, const int);
 extern int     @(pre)QuerySpace (SuperMatrix *, SuperMatrix *, mem_usage_t *);
 extern int     ilu_@(pre)QuerySpace (SuperMatrix *, SuperMatrix *, mem_usage_t *);
 
 /*! \brief Auxiliary routines */
-extern void    @(pre)readhb(FILE *, int *, int *, int *, @(type) **, int **, int **);
-extern void    @(pre)readrb(int *, int *, int *, @(type) **, int **, int **);
-extern void    @(pre)readtriple(int *, int *, int *, @(type) **, int **, int **);
-extern void    @(pre)readMM(FILE *, int *, int *, int *, @(type) **, int **, int **);
-extern void    @(pre)CompRow_to_CompCol(int, int, int, @(type)*, int*, int*,
-		                   @(type) **, int **, int **);
+extern void    @(pre)readhb(FILE *, int *, int *, int_t *, @(type) **, int_t **, int_t **);
+extern void    @(pre)readrb(int *, int *, int_t *, @(type) **, int_t **, int_t **);
+extern void    @(pre)readtriple(int *, int *, int_t *, @(type) **, int_t **, int_t **);
+extern void    @(pre)readMM(FILE *, int *, int *, int_t *, @(type) **, int_t **, int_t **);
 extern void    @(pre)fill (@(type) *, int, @(type));
 extern void    @(pre)inf_norm_error (int, SuperMatrix *, @(type) *);
 extern @(mod_type)  @(mod_pre)qselect(int, @(mod_type) *, int);
@@ -269,7 +263,7 @@ extern @(mod_type)  @(mod_pre)qselect(int, @(mod_type) *, int);
 extern void    @(pre)Print_CompCol_Matrix(char *, SuperMatrix *);
 extern void    @(pre)Print_SuperNode_Matrix(char *, SuperMatrix *);
 extern void    @(pre)Print_Dense_Matrix(char *, SuperMatrix *);
-extern void    @(pre)print_lu_col(char *, int, int, int *, GlobalLU_t *);
+extern void    @(pre)print_lu_col(char *, int, int, int_t *, GlobalLU_t *);
 extern int     print_double_vec(char *, int, double *);
 extern void    @(pre)check_tempv(int, @(type) *);
 

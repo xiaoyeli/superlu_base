@@ -26,9 +26,9 @@ int @(pre)fill_diag(int n, NCformat *Astore)
    structurally singular. */
 {
     @(type) *nzval = (@(type) *)Astore->nzval;
-    int *rowind = Astore->rowind;
-    int *colptr = Astore->colptr;
-    int nnz = colptr[n];
+    int_t *rowind = Astore->rowind;
+    int_t *colptr = Astore->colptr;
+    int_t nnz = colptr[n];
     int fill = 0;
     @(type) *nzval_new;
 @precision SINGLE DOUBLE
@@ -36,7 +36,7 @@ int @(pre)fill_diag(int n, NCformat *Astore)
 @precision SCOMPLEX DCOMPLEX
     @(type) zero = {0.0, 0.0};
 @precision !
-    int *rowind_new;
+    int_t *rowind_new;
     int i, j, diag;
 
     for (i = 0; i < n; i++)
@@ -80,13 +80,13 @@ int @(pre)dominate(int n, NCformat *Astore)
 /* make the matrix diagonally dominant */
 {
     @(type) *nzval = (@(type) *)Astore->nzval;
-    int *rowind = Astore->rowind;
-    int *colptr = Astore->colptr;
-    int nnz = colptr[n];
+    int_t *rowind = Astore->rowind;
+    int_t *colptr = Astore->colptr;
+    int_t nnz = colptr[n];
     int fill = 0;
     @(type) *nzval_new;
-    int *rowind_new;
-    int i, j, diag;
+    int_t *rowind_new;
+    int_t i, j, diag;
     double s;
 
     for (i = 0; i < n; i++)

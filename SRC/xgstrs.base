@@ -118,7 +118,7 @@ void
     int      i, j, k, iptr, jcol, n, ldb, nrhs;
     @(type)   *work, *rhs_work, *soln;
     flops_t  solve_ops;
-    void @(pre)print_soln(int n, int nrhs, @(type) *soln)
+    void @(pre)print_soln(int n, int nrhs, @(type) *soln);
 
     /* Test input parameters ... */
     *info = 0;
@@ -256,7 +256,7 @@ void
 	    } /* else ... */
 	} /* for L-solve */
 
-#ifdef DEBUG
+#if ( DEBUGlevel>=2 )
   	printf("After L-solve: y=\n");
 	@(pre)print_soln(n, nrhs, Bmat);
 #endif
@@ -327,7 +327,7 @@ void
 	    
 	} /* for U-solve */
 
-#ifdef DEBUG
+#if ( DEBUGlevel>=2 )
   	printf("After U-solve: x=\n");
 	@(pre)print_soln(n, nrhs, Bmat);
 #endif

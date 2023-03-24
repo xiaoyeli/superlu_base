@@ -79,7 +79,7 @@ ilu_@(pre)pivotL(
     int		 fsupc;  /* first column in the supernode */
     int		 nsupc;  /* no of columns in the supernode */
     int		 nsupr;  /* no of rows in the supernode */
-    int		 lptr;	 /* points to the starting subscript of the supernode */
+    int_t	 lptr;	 /* points to the starting subscript of the supernode */
     register int	 pivptr;
     int		 old_pivptr, diag, ptr0;
     register @(mod_type)  pivmax, rtemp;
@@ -87,11 +87,11 @@ ilu_@(pre)pivotL(
     @(type)	 temp;
     @(type)	 *lu_sup_ptr;
     @(type)	 *lu_col_ptr;
-    int		 *lsub_ptr;
+    int_t	 *lsub_ptr;
     register int	 isub, icol, k, itemp;
-    int		 *lsub, *xlsub;
+    int_t	 *lsub, *xlsub;
     @(type)	 *lusup;
-    int		 *xlusup;
+    int_t	 *xlusup;
     flops_t	 *ops = stat->ops;
     int		 info;
 @precision SCOMPLEX DCOMPLEX

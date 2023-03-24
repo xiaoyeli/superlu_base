@@ -67,7 +67,8 @@ int @(pre)gst01(int m, int n, SuperMatrix *A, SuperMatrix *L,
 @precision SCOMPLEX DCOMPLEX
     @(type) zero = {0.0, 0.0};
 @precision !
-    int i, j, k, arow, lptr,isub,  urow, superno, fsupc, u_part;
+    int i, j, k, arow, superno, fsupc, u_part;
+    int_t urow, lptr, isub;
     @(type) utemp;
 @precision SCOMPLEX DCOMPLEX
     @(type) comp_temp;
@@ -78,7 +79,7 @@ int @(pre)gst01(int m, int n, SuperMatrix *A, SuperMatrix *L,
     SCformat *Lstore;
     NCformat *Astore, *Ustore;
     @(type) *Aval, *Lval, *Uval;
-    int *colbeg, *colend;
+    int_t *colbeg, *colend;
 
     /* Function prototypes */
     extern @(mod_type) @(pre)langs(char *, SuperMatrix *);

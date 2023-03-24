@@ -356,10 +356,10 @@ at the top-level directory.
 void
 @(pre)gssvx(superlu_options_t *options, SuperMatrix *A, int *perm_c, int *perm_r,
        int *etree, char *equed, @(mod_type) *R, @(mod_type) *C,
-       SuperMatrix *L, SuperMatrix *U, void *work, int lwork,
+       SuperMatrix *L, SuperMatrix *U, void *work, int_t lwork,
        SuperMatrix *B, SuperMatrix *X, @(mod_type) *recip_pivot_growth, 
        @(mod_type) *rcond, @(mod_type) *ferr, @(mod_type) *berr, 
-       GlobalLU_t *Glu, mem_usage_t *mem_usage, SuperLUStat_t *stat, int *info )
+       GlobalLU_t *Glu, mem_usage_t *mem_usage, SuperLUStat_t *stat, int_t *info )
 {
 
 

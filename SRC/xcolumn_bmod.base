@@ -90,10 +90,10 @@ int
     int          d_fsupc; /* Distance between the first column of the current
 			     panel and the first column of the current snode. */
     int          *xsup, *supno;
-    int          *lsub, *xlsub;
+    int_t        *lsub, *xlsub;
     @(type)       *lusup;
-    int          *xlusup;
-    int          nzlumax;
+    int_t        *xlusup;
+    int_t        nzlumax;
     @(type)       *tempv1;
 @precision SINGLE DOUBLE
     @(type)      zero = 0.0;
@@ -105,7 +105,7 @@ int
     @(type)      none = {-1.0, 0.0};
     @(type)	 comp_temp, comp_temp1;
 @precision !
-    int          mem_error;
+    int_t        mem_error;
     flops_t      *ops = stat->ops;
 
     xsup    = Glu->xsup;

@@ -24,11 +24,11 @@ at the top-level directory.
  */
 int
 sp_@(pre)convert(int m, int n, @(type) *A, int lda, int kl, int ku,
-	   @(type) *a, int *asub, int *xa, int *nnz)
+	   @(type) *a, int_t *asub, int_t *xa, int_t *nnz)
 {
-    int     lasta = 0;
-    int     i, j, ilow, ihigh;
-    int     *row;
+    int_t     lasta = 0;
+    int_t     i, j, ilow, ihigh;
+    int_t     *row;
     @(type)  *val;
 
     for (j = 0; j < n; ++j) {

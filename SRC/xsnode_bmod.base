@@ -65,12 +65,12 @@ int
 @precision SCOMPLEX DCOMPLEX
     @(type)   comp_zero = {0.0, 0.0};
 @precision !
-    int            luptr, nsupc, nsupr, nrow;
+    int            nsupc, nsupr, nrow;
     int            isub, irow;
     register int   ufirst, nextlu;
-    int            *lsub, *xlsub;
+    int_t          *lsub, *xlsub;
     @(type)         *lusup;
-    int            *xlusup;
+    int_t          *xlusup, luptr;
     flops_t *ops = stat->ops;
 
     lsub    = Glu->lsub;

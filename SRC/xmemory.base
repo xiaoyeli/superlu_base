@@ -1,3 +1,4 @@
+
 /*! \file
 Copyright (c) 2003, The Regents of the University of California, through
 Lawrence Berkeley National Laboratory (subject to receipt of any required 
@@ -22,11 +23,11 @@ at the top-level directory.
 
 
 /* Internal prototypes */
-void  *@(pre)expand (int *, MemType,int, int, GlobalLU_t *);
+void  *@(pre)expand (int_t *, MemType, int_t, int, GlobalLU_t *);
 int   @(pre)LUWorkInit (int, int, int, int **, @(type) **, GlobalLU_t *);
-void  copy_mem_@(type) (int, void *, void *);
+void  copy_mem_@(type) (int_t, void *, void *);
 void  @(pre)StackCompress (GlobalLU_t *);
-void  @(pre)SetupSpace (void *, int, GlobalLU_t *);
+void  @(pre)SetupSpace (void *, int_t, GlobalLU_t *);
 void  *@(pre)user_malloc (int, int, GlobalLU_t *);
 void  @(pre)user_free (int, int, GlobalLU_t *);
 
@@ -51,7 +52,7 @@ extern void    user_bcopy      (char *, char *, int);
  *    lwork = 0: use system malloc;
  *    lwork > 0: use user-supplied work[] space.
  */
-void @(pre)SetupSpace(void *work, int lwork, GlobalLU_t *Glu)
+void @(pre)SetupSpace(void *work, int_t lwork, GlobalLU_t *Glu)
 {
     if ( lwork == 0 ) {
 	Glu->MemModel = SYSTEM; /* malloc/free */
@@ -186,8 +187,8 @@ int ilu_@(pre)QuerySpace(SuperMatrix *L, SuperMatrix *U, mem_usage_t *mem_usage)
  *     memory allocation failure occurred.
  * </pre> 
  */
-int
-@(pre)LUMemInit(fact_t fact, void *work, int lwork, int m, int n, int annz,
+int_t
+@(pre)LUMemInit(fact_t fact, void *work, int_t lwork, int m, int n, int_t annz,
 	  int panel_size, @(mod_type) fill_ratio, SuperMatrix *L, SuperMatrix *U,
           GlobalLU_t *Glu, int **iwork, @(type) **dwork)
 {
@@ -195,12 +196,12 @@ int
     SCformat *Lstore;
     NCformat *Ustore;
     int      *xsup, *supno;
-    int      *lsub, *xlsub;
+    int_t    *lsub, *xlsub;
     @(type)   *lusup;
-    int      *xlusup;
+    int_t    *xlusup;
     @(type)   *ucol;
-    int      *usub, *xusub;
-    int      nzlmax, nzumax, nzlumax;
+    int_t    *usub, *xusub;
+    int_t    nzlmax, nzumax, nzlumax;
     
     iword     = sizeof(int);
     dword     = sizeof(@(type));
@@ -224,30 +225,30 @@ int
 	}
 	
 #if ( PRNTlevel >= 1 )
-	printf("@(pre)LUMemInit() called: fill_ratio %.0f, nzlmax %ld, nzumax %ld\n", 
-	       fill_ratio, nzlmax, nzumax);
+	printf("@(pre)LUMemInit() called: fill_ratio %.0f, nzlmax %lld, nzumax %lld\n", 
+	       fill_ratio, (long long) nzlmax, (long long) nzumax);
 	fflush(stdout);
 #endif	
 	
 	/* Integer pointers for L\U factors */
 	if ( Glu->MemModel == SYSTEM ) {
-	    xsup   = intMalloc(n+1);
-	    supno  = intMalloc(n+1);
+	    xsup   = int32Malloc(n+1);
+	    supno  = int32Malloc(n+1);
 	    xlsub  = intMalloc(n+1);
 	    xlusup = intMalloc(n+1);
 	    xusub  = intMalloc(n+1);
 	} else {
 	    xsup   = (int *)@(pre)user_malloc((n+1) * iword, HEAD, Glu);
 	    supno  = (int *)@(pre)user_malloc((n+1) * iword, HEAD, Glu);
-	    xlsub  = (int *)@(pre)user_malloc((n+1) * iword, HEAD, Glu);
-	    xlusup = (int *)@(pre)user_malloc((n+1) * iword, HEAD, Glu);
-	    xusub  = (int *)@(pre)user_malloc((n+1) * iword, HEAD, Glu);
+	    xlsub  = @(pre)user_malloc((n+1) * iword, HEAD, Glu);
+	    xlusup = @(pre)user_malloc((n+1) * iword, HEAD, Glu);
+	    xusub  = @(pre)user_malloc((n+1) * iword, HEAD, Glu);
 	}
 
 	lusup = (@(type) *) @(pre)expand( &nzlumax, LUSUP, 0, 0, Glu );
 	ucol  = (@(type) *) @(pre)expand( &nzumax, UCOL, 0, 0, Glu );
-	lsub  = (int *)    @(pre)expand( &nzlmax, LSUB, 0, 0, Glu );
-	usub  = (int *)    @(pre)expand( &nzumax, USUB, 0, 1, Glu );
+	lsub  = (int_t *) @(pre)expand( &nzlmax, LSUB, 0, 0, Glu );
+	usub  = (int_t *) @(pre)expand( &nzumax, USUB, 0, 1, Glu );
 
 	while ( !lusup || !ucol || !lsub || !usub ) {
 	    if ( Glu->MemModel == SYSTEM ) {
@@ -268,13 +269,13 @@ int
 	    }
 #if ( PRNTlevel >= 1)
 	    printf("@(pre)LUMemInit() reduce size: nzlmax %ld, nzumax %ld\n", 
-		   nzlmax, nzumax);
+		   (long) nzlmax, (long) nzumax);
 	    fflush(stdout);
 #endif
 	    lusup = (@(type) *) @(pre)expand( &nzlumax, LUSUP, 0, 0, Glu );
 	    ucol  = (@(type) *) @(pre)expand( &nzumax, UCOL, 0, 0, Glu );
-	    lsub  = (int *)    @(pre)expand( &nzlmax, LSUB, 0, 0, Glu );
-	    usub  = (int *)    @(pre)expand( &nzumax, USUB, 0, 1, Glu );
+	    lsub  = (int_t *) @(pre)expand( &nzlmax, LSUB, 0, 0, Glu );
+	    usub  = (int_t *) @(pre)expand( &nzumax, USUB, 0, 1, Glu );
 	}
 	
     } else {
@@ -344,12 +345,14 @@ int
     int    maxsuper = SUPERLU_MAX( sp_ienv(3), sp_ienv(7) ),
            rowblk   = sp_ienv(4);
 
-    isize = ( (2 * panel_size + 3 + NO_MARKER ) * m + n ) * sizeof(int);
+    /* xplore[m] and xprune[n] can be 64-bit; they are allocated separately */
+    //isize = ( (2 * panel_size + 3 + NO_MARKER ) * m + n ) * sizeof(int);
+    isize = ( (2 * panel_size + 2 + NO_MARKER ) * m ) * sizeof(int);
     dsize = (m * panel_size +
 	     NUM_TEMPV(m,panel_size,maxsuper,rowblk)) * sizeof(@(type));
     
     if ( Glu->MemModel == SYSTEM ) 
-	*iworkptr = (int *) intCalloc(isize/sizeof(int));
+	*iworkptr = (int *) int32Calloc(isize/sizeof(int));
     else
 	*iworkptr = (int *) @(pre)user_malloc(isize, TAIL, Glu);
     if ( ! *iworkptr ) {
@@ -426,19 +429,19 @@ void @(pre)LUWorkFree(int *iwork, @(type) *dwork, GlobalLU_t *Glu)
  *               > 0 - number of bytes allocated when run out of space
  * </pre>
  */
-int
+int_t
 @(pre)LUMemXpand(int jcol,
-	   int next,          /* number of elements currently in the factors */
+	   int_t next,          /* number of elements currently in the factors */
 	   MemType mem_type,  /* which type of memory to expand  */
-	   int *maxlen,       /* modified - maximum length of a data structure */
+	   int_t *maxlen,       /* modified - maximum length of a data structure */
 	   GlobalLU_t *Glu    /* modified - global LU data structures */
 	   )
 {
     void   *new_mem;
     
 #ifdef DEBUG    
-    printf("@(pre)LUMemXpand(): jcol %d, next %d, maxlen %d, MemType %d\n",
-	   jcol, next, *maxlen, mem_type);
+    printf("@(pre)LUMemXpand(): jcol %d, next %ld, maxlen %ld, MemType %d\n",
+	   jcol, (long) next, (long) *maxlen, mem_type);
 #endif    
 
     if (mem_type == USUB) 
@@ -447,9 +450,9 @@ int
 	new_mem = @(pre)expand(maxlen, mem_type, next, 0, Glu);
     
     if ( !new_mem ) {
-	int    nzlmax  = Glu->nzlmax;
-	int    nzumax  = Glu->nzumax;
-	int    nzlumax = Glu->nzlumax;
+	int_t    nzlmax  = Glu->nzlmax;
+	int_t    nzumax  = Glu->nzumax;
+	int_t    nzlumax = Glu->nzlumax;
     	fprintf(stderr, "Can't expand MemType %d: jcol %d\n", mem_type, jcol);
     	return (@(pre)memory_usage(nzlmax, nzumax, nzlumax, Glu->n) + Glu->n);
     }
@@ -464,11 +467,11 @@ int
 	Glu->nzumax = *maxlen;
 	break;
       case LSUB:
-	Glu->lsub   = (int *) new_mem;
+	Glu->lsub   = (int_t *) new_mem;
 	Glu->nzlmax = *maxlen;
 	break;
       case USUB:
-	Glu->usub   = (int *) new_mem;
+	Glu->usub   = (int_t *) new_mem;
 	Glu->nzumax = *maxlen;
 	break;
       default: break;
@@ -479,11 +482,10 @@ int
 }
 
 
-
 void
-copy_mem_@(type)(int howmany, void *old, void *new)
+copy_mem_@(type)(int_t howmany, void *old, void *new)
 {
-    register int i;
+    register int_t i;
     @(type) *dold = old;
     @(type) *dnew = new;
     for (i = 0; i < howmany; i++) dnew[i] = dold[i];
@@ -493,9 +495,9 @@ copy_mem_@(type)(int howmany, void *old, void *new)
  */
 void
 *@(pre)expand (
-	 int *prev_len,   /* length used from previous call */
+	 int_t *prev_len,   /* length used from previous call */
 	 MemType type,    /* which part of the memory to expand */
-	 int len_to_copy, /* size of the memory to be copied to new store */
+	 int_t len_to_copy, /* size of the memory to be copied to new store */
 	 int keep_prev,   /* = 1: use prev_len;
 			     = 0: compute new_len to expand */
 	 GlobalLU_t *Glu  /* modified - global LU data structures */
@@ -516,7 +518,7 @@ void
 	new_len = alpha * *prev_len;
     }
     
-    if ( type == LSUB || type == USUB ) lword = sizeof(int);
+    if ( type == LSUB || type == USUB ) lword = sizeof(int_t);
     else lword = sizeof(@(type));
 
     if ( Glu->MemModel == SYSTEM ) {
@@ -616,10 +618,10 @@ void
 @(pre)StackCompress(GlobalLU_t *Glu)
 {
     register int iword, dword, ndim;
-    char    *last, *fragment;
-    int      *ifrom, *ito;
+    char     *last, *fragment;
+    int_t    *ifrom, *ito;
     @(type)   *dfrom, *dto;
-    int      *xlsub, *lsub, *xusub, *usub, *xlusup;
+    int_t    *xlsub, *lsub, *xusub, *usub, *xlusup;
     @(type)   *ucol, *lusup;
     
     iword = sizeof(int);
@@ -640,12 +642,12 @@ void
     ucol = dto;
 
     ifrom = lsub;
-    ito = (int *) ((char*)ucol + xusub[ndim] * iword);
+    ito = (int_t *) ((char*)ucol + xusub[ndim] * iword);
     copy_mem_int(xlsub[ndim], ifrom, ito);
     lsub = ito;
     
     ifrom = usub;
-    ito = (int *) ((char*)lsub + xlsub[ndim] * iword);
+    ito = (int_t *) ((char*)lsub + xlsub[ndim] * iword);
     copy_mem_int(xusub[ndim], ifrom, ito);
     usub = ito;
     
@@ -659,7 +661,7 @@ void
     Glu->usub = usub;
     
 #ifdef DEBUG
-    printf("@(pre)StackCompress: fragment %d\n", fragment);
+    printf("@(pre)StackCompress: fragment %lld\n", (long long) fragment);
     /* for (last = 0; last < ndim; ++last)
 	print_lu_col("After compress:", last, 0);*/
 #endif    
@@ -669,11 +671,11 @@ void
 /*! \brief Allocate storage for original matrix A
  */
 void
-@(pre)allocateA(int n, int nnz, @(type) **a, int **asub, int **xa)
+@(pre)allocateA(int n, int_t nnz, @(type) **a, int_t **asub, int_t **xa)
 {
     *a    = (@(type) *) @(type)Malloc(nnz);
-    *asub = (int *) intMalloc(nnz);
-    *xa   = (int *) intMalloc(n+1);
+    *asub = (int_t *) intMalloc(nnz);
+    *xa   = (int_t *) intMalloc(n+1);
 }
 
 
@@ -705,15 +707,16 @@ void
 }
 
 
-int @(pre)memory_usage(const int nzlmax, const int nzumax, 
-		  const int nzlumax, const int n)
+int_t @(pre)memory_usage(const int_t nzlmax, const int_t nzumax,
+		  const int_t nzlumax, const int n)
 {
-    register int iword, dword;
+    register int iword, liword, dword;
 
     iword   = sizeof(int);
+    liword  = sizeof(int_t);
     dword   = sizeof(@(type));
     
     return (10 * n * iword +
-	    nzlmax * iword + nzumax * (iword + dword) + nzlumax * dword);
+	    nzlmax * liword + nzumax * (liword + dword) + nzlumax * dword);
 
 }
