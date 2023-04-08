@@ -1,4 +1,3 @@
-
 /*! \file
 Copyright (c) 2003, The Regents of the University of California, through
 Lawrence Berkeley National Laboratory (subject to receipt of any required 
@@ -214,8 +213,8 @@ int_t
     
     if ( fact != SamePattern_SameRowPerm ) {
 	/* Guess for L\U factors */
-	nzumax = nzlumax = fill_ratio * annz;
-	nzlmax = SUPERLU_MAX(1, fill_ratio/4.) * annz;
+	nzumax = nzlumax = nzlmax = fill_ratio * annz;
+	//nzlmax = SUPERLU_MAX(1, fill_ratio/4.) * annz;
 
 	if ( lwork == -1 ) {
 	    return ( GluIntArray(n) * iword + TempSpace(m, panel_size)
@@ -369,7 +368,7 @@ int
 	    *dworkptr = (@(type)*) DoubleAlign(*dworkptr);
 	    *dworkptr = (@(type)*) ((double*)*dworkptr - 1);
 	    extra = (char*)old_ptr - (char*)*dworkptr;
-#ifdef DEBUG	    
+#if ( DEBUGlevel>=1 )
 	    printf("@(pre)LUWorkInit: not aligned, extra %d\n", extra);
 #endif	    
 	    Glu->stack.top2 -= extra;
@@ -439,9 +438,9 @@ int_t
 {
     void   *new_mem;
     
-#ifdef DEBUG    
-    printf("@(pre)LUMemXpand(): jcol %d, next %ld, maxlen %ld, MemType %d\n",
-	   jcol, (long) next, (long) *maxlen, mem_type);
+#if ( DEBUGlevel>=1 ) 
+    printf("@(pre)LUMemXpand(): jcol %d, next %lld, maxlen %lld, MemType %d\n",
+	   jcol, (long long) next, (long long) *maxlen, mem_type);
 #endif    
 
     if (mem_type == USUB) 
@@ -506,7 +505,8 @@ void
     float    EXPAND = 1.5;
     float    alpha;
     void     *new_mem, *old_mem;
-    int      new_len, tries, lword, extra, bytes_to_copy;
+    int_t    new_len, bytes_to_copy;
+    int      tries, lword, extra;
     ExpHeader *expanders = Glu->expanders; /* Array of 4 types of memory */
 
     alpha = EXPAND;
@@ -552,7 +552,7 @@ void
 		old_mem = new_mem;
 		new_mem = (void *)DoubleAlign(new_mem);
 		extra = (char*)new_mem - (char*)old_mem;
-#ifdef DEBUG		
+#if ( DEBUGlevel>=1 )
 		printf("expand(): not aligned, extra %d\n", extra);
 #endif		
 		Glu->stack.top1 += extra;
@@ -660,7 +660,7 @@ void
     Glu->lsub = lsub;
     Glu->usub = usub;
     
-#ifdef DEBUG
+#if ( DEBUGlevel>=1 )
     printf("@(pre)StackCompress: fragment %lld\n", (long long) fragment);
     /* for (last = 0; last < ndim; ++last)
 	print_lu_col("After compress:", last, 0);*/

@@ -99,7 +99,8 @@ void
     /* Local variables */
     NCformat *Astore;
     @(type)   *Aval;
-    int i, j, irow;
+    int_t i, j;
+    int   irow;
     @(mod_type) large, small, cj;
 @precision DCOMPLEX SCOMPLEX
     @(mod_type) temp;

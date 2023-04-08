@@ -114,8 +114,9 @@ void
     SCformat *Lstore;
     NCformat *Ustore;
     @(type)   *Lval, *Uval;
-    int      fsupc, nrow, nsupr, nsupc, luptr, istart, irow;
-    int      i, j, k, iptr, jcol, n, ldb, nrhs;
+    int      fsupc, nrow, nsupr, nsupc, irow;
+    int_t    i, j, k, luptr, istart, iptr;
+    int      jcol, n, ldb, nrhs;
     @(type)   *work, *rhs_work, *soln;
     flops_t  solve_ops;
     void @(pre)print_soln(int n, int nrhs, @(type) *soln);
@@ -136,8 +137,8 @@ void
 	      B->Stype != SLU_DN || B->Dtype != @(Dtype_PRE) || B->Mtype != SLU_GE )
 	*info = -6;
     if ( *info ) {
-	i = -(*info);
-	input_error("@(pre)gstrs", &i);
+	int ii = -(*info);
+	input_error("@(pre)gstrs", &ii);
 	return;
     }
 

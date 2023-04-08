@@ -114,8 +114,8 @@ void
              U->Stype != SLU_NC || U->Dtype != @(Dtype_PRE) || U->Mtype != SLU_TRU) 
 	*info = -3;
     if (*info != 0) {
-	i = -(*info);
-	input_error("@(pre)gscon", &i);
+	int ii = -(*info);
+	input_error("@(pre)gscon", &ii);
 	return;
     }
 

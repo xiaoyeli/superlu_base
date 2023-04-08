@@ -99,7 +99,8 @@ void
     /* Local variables */
     NCformat *Astore;
     @(type)   *Aval;
-    int i, j, irow;
+    int_t i, j;
+    int   irow;
     @(mod_type) rcmin, rcmax;
     @(mod_type) bignum, smlnum;
     extern @(mod_type) @(mod_pre)mach(char *);
@@ -110,8 +111,8 @@ void
 	 A->Stype != SLU_NC || A->Dtype != @(Dtype_PRE) || A->Mtype != SLU_GE )
 	*info = -1;
     if (*info != 0) {
-	i = -(*info);
-	input_error("@(pre)gsequ", &i);
+	int ii = -(*info);
+	input_error("@(pre)gsequ", &ii);
 	return;
     }
 

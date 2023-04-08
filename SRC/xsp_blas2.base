@@ -106,9 +106,9 @@ sp_@(pre)trsv(char *uplo, char *trans, char *diag, SuperMatrix *L,
     @(type) alpha = {1.0, 0.0}, beta = {1.0, 0.0};
     @(type) comp_zero = {0.0, 0.0};
 @precision !
-    int nrow;
-    int fsupc, nsupr, nsupc, luptr, istart, irow;
-    int i, k, iptr, jcol;
+    int nrow, irow, jcol;
+    int fsupc, nsupr, nsupc;
+    int_t luptr, istart, i, k, iptr;
     @(type) *work;
     flops_t solve_ops;
 
@@ -122,8 +122,8 @@ sp_@(pre)trsv(char *uplo, char *trans, char *diag, SuperMatrix *L,
     else if ( L->nrow != L->ncol || L->nrow < 0 ) *info = -4;
     else if ( U->nrow != U->ncol || U->nrow < 0 ) *info = -5;
     if ( *info ) {
-	i = -(*info);
-	input_error("sp_@(pre)trsv", &i);
+	int ii = -(*info);
+	input_error("sp_@(pre)trsv", &ii);
 	return 0;
     }
 
@@ -592,8 +592,9 @@ sp_@(pre)gemv(char *trans, @(type) alpha, SuperMatrix *A, @(type) *x,
     @(type)   *Aval;
     int info;
     @(type) temp;
-    int lenx, leny, i, j, irow;
-    int iy, jx, jy, kx, ky;
+    int lenx, leny;
+    int iy, jx, jy, kx, ky, irow;
+    int_t i, j;
     int notran;
 
     notran = ( strncmp(trans, "N", 1)==0 || strncmp(trans, "n", 1)==0 );
