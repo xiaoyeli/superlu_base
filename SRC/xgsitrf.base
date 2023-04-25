@@ -661,6 +661,8 @@ void
     fixupL(min_mn, perm_r, Glu);
 
     @(pre)LUWorkFree(iwork, @(pre)work, Glu); /* Free work space and compress storage */
+    SUPERLU_FREE (xplore);
+    SUPERLU_FREE (marker_relax);
 
     if ( fact == SamePattern_SameRowPerm ) {
 	/* L and U structures may have changed due to possibly different
