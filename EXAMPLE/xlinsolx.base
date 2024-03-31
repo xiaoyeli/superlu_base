@@ -203,7 +203,7 @@ int main(int argc, char *argv[])
  * Parse command line inputs.
  */
 void
-parse_command_line(int argc, char *argv[], int *lwork,
+parse_command_line(int argc, char *argv[], int_t *lwork,
                    @(mod_type) *u, yes_no_t *equil, trans_t *trans )
 {
     int c;

@@ -38,8 +38,8 @@
 	@define MOD_TYPE @FLOAT@
 	@define mod_pre	 @s@
 	@define MOD_PRE	 @S@
-	@define type @complex@
-	@define TYPE @COMPLEX@
+	@define type @singlecomplex@
+	@define TYPE @SINGLE COMPLEX@
 	@define pre @c@
 	@define PRE @C@
 	@define SC_PRE @C@

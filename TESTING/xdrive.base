@@ -1,4 +1,4 @@
-/*! \file
+/*
 Copyright (c) 2003, The Regents of the University of California, through
 Lawrence Berkeley National Laboratory (subject to receipt of any required 
 approvals from U.S. Dept. of Energy) 
@@ -16,13 +16,20 @@ at the top-level directory.
  * October 15, 2003
  *
  */
-/*
- * File name:		@(pre)drive.c
- * Purpose:             MAIN test program
+
+/*! \file
+ * @(PRE)DRIVE is the main test program for the @(TYPE) linear 
+ * equation driver routines @(PRE)GSSV and @(PRE)GSSVX.
+ * 
+ * The program is invoked by a shell script file -- @(pre)test.csh.
+ * The output from the tests are written into a file -- @(pre)test.out.
+ *
+ * \ingroup Testing@(PRE)
  */
+#include <getopt.h>
 #include <string.h>
-#include <unistd.h>
 #include "slu_@(pre)defs.h"
+#include "MATGEN/matgen.h"
 
 #define NTESTS    5      /* Number of test types */
 #define NTYPES    11     /* Number of matrix types */
@@ -37,20 +44,11 @@ parse_command_line(int argc, char *argv[], char *matrix_type,
 		   int *n, int *w, int *relax, int *nrhs, int *maxsuper,
 		   int *rowblk, int *colblk, int_t *lwork, double *u, FILE **fp);
 
+/*!
+ * Entry point of test program.
+ */
 int main(int argc, char *argv[])
 {
-/* 
- * Purpose
- * =======
- *
- * @(PRE)DRIVE is the main test program for the @(TYPE) linear 
- * equation driver routines @(PRE)GSSV and @(PRE)GSSVX.
- * 
- * The program is invoked by a shell script file -- @(pre)test.csh.
- * The output from the tests are written into a file -- @(pre)test.out.
- *
- * =====================================================================
- */
     @(type)         *a, *a_save;
     int_t          *asub, *asub_save;
     int_t          *xa, *xa_save;
@@ -70,7 +68,7 @@ int main(int argc, char *argv[])
     @(mod_type)         *ferr, *berr;
     @(mod_type)         *rwork;
     @(type)	   *wwork;
-    void           *work;
+    void           *work = NULL;
     int            nrhs, panel_size, relax;
     int            m, n, info1;
     int_t          nnz, lwork, info;
@@ -84,8 +82,9 @@ int main(int argc, char *argv[])
     int            prefact, equil, iequed;
     int            nt, nrun, nfail, nerrs, imat, fimat, nimat;
     int            nfact, ifact, itran;
-    int            kl, ku, mode, lda;
-    int            zerot, izero, ioff;
+    int            kl, ku, mode, lda, ioff;
+    int            zerot; /* indicate whether the matrix is singular */
+    int            izero; /* incidate the first column that is entirely zero */
     double         u;
     @(mod_type)         anorm, cndnum;
     @(type)         *Afull;
@@ -169,7 +168,11 @@ int main(int argc, char *argv[])
 	nnz = n * n;        /* upper bound */
 	fimat = 1;
 	nimat = NTYPES;
+@precision SCOMPLEX
+	Afull = (@(type) *) complexCalloc(lda * n);
+@precision SINGLE DOUBLE DCOMPLEX
 	Afull = @(type)Calloc(lda * n);
+@precision !	
 	@(pre)allocateA(n, nnz, &a, &asub, &xa);
     } else {
 	/* Read a sparse matrix */
@@ -178,14 +181,24 @@ int main(int argc, char *argv[])
     }
 
     @(pre)allocateA(n, nnz, &a_save, &asub_save, &xa_save);
+@precision SCOMPLEX
+    rhsb = (@(type) *) complexMalloc(m * nrhs);
+    bsav = (@(type) *) complexMalloc(m * nrhs);
+    solx = (@(type) *) complexMalloc(n * nrhs);
+    xact = (@(type) *) complexMalloc(n * nrhs);
+    wwork = (@(type) *) complexCalloc( SUPERLU_MAX(m,n) * SUPERLU_MAX(4,nrhs) );
+@precision SINGLE DOUBLE DCOMPLEX
     rhsb = @(type)Malloc(m * nrhs);
     bsav = @(type)Malloc(m * nrhs);
     solx = @(type)Malloc(n * nrhs);
+    xact = @(type)Malloc(n * nrhs);
+    wwork = @(type)Calloc( SUPERLU_MAX(m,n) * SUPERLU_MAX(4,nrhs) );
+@precision !
+
     ldb  = m;
     ldx  = n;
     @(pre)Create_Dense_Matrix(&B, m, nrhs, rhsb, ldb, SLU_DN, @(Dtype_PRE), SLU_GE);
     @(pre)Create_Dense_Matrix(&X, n, nrhs, solx, ldx, SLU_DN, @(Dtype_PRE), SLU_GE);
-    xact = @(type)Malloc(n * nrhs);
     etree   = int32Malloc(n);
     perm_r  = int32Malloc(n);
     perm_c  = int32Malloc(n);
@@ -212,7 +225,6 @@ int main(int argc, char *argv[])
     if ( !ferr ) ABORT("SUPERLU_MALLOC fails for ferr");
     if ( !berr ) ABORT("SUPERLU_MALLOC fails for berr");
     if ( !rwork ) ABORT("SUPERLU_MALLOC fails for rwork");
-    wwork   = @(type)Calloc( SUPERLU_MAX(m,n) * SUPERLU_MAX(4,nrhs) );
 
     for (i = 0; i < n; ++i) perm_c[i] = pc_save[i] = i;
     options.ColPerm = MY_PERMC;
@@ -255,14 +267,14 @@ int main(int argc, char *argv[])
 			    Afull[ioff + i + j*lda] = zero;
 		}
 	    } else {
-		izero = 0;
+		izero = n+1; /* none of the column is zero */
 	    }
 
 	    /* Convert to sparse representation. */
 	    sp_@(pre)convert(n, n, Afull, lda, kl, ku, a, asub, xa, &nnz);
 
 	} else {
-	    izero = 0;
+	    izero = n+1; /* none of the column is zero */
 	    zerot = 0;
 	}
 	
@@ -378,12 +390,13 @@ int main(int argc, char *argv[])
                                 printf(FMT3, "@(pre)gssv",
 				       (int) info, izero, n, nrhs, imat, nfail);
 			    } else {
-                                /* Reconstruct matrix from factors and
-	                           compute residual. */
-                                @(pre)gst01(m, n, &A, &L, &U, perm_c, perm_r,
+                                /* Reconstruct matrix from factors and compute residual.
+				 * Only compute the leading 'izero' nonzero columns.
+				 */
+                                @(pre)gst01(m, izero-1, &A, &L, &U, perm_c, perm_r,
                                          &result[0]);
 				nt = 1;
-				if ( izero == 0 ) {
+				if ( izero == (n+1) ) {
 				    /* Compute residual of the computed
 				       solution. */
 				    @(pre)Copy_Dense_Matrix(m, nrhs, rhsb, ldb,
@@ -442,9 +455,10 @@ int main(int argc, char *argv[])
                             }
 			} else {
 			    if ( !prefact ) {
-			    	/* Reconstruct matrix from factors and
-	 			   compute residual. */
-                                @(pre)gst01(m, n, &A, &L, &U, perm_c, perm_r,
+			    	/* Reconstruct matrix from factors and compute residual.
+				 * Only compute the leading 'izero' nonzero columns.
+				 */
+                                @(pre)gst01(m, izero-1, &A, &L, &U, perm_c, perm_r,
                                          &result[0]);
 				k1 = 0;
 			    } else {
@@ -537,10 +551,10 @@ int main(int argc, char *argv[])
 	Destroy_SuperMatrix_Store(&U);
     }
 
-    return 0;
-}
+    return (nfail == 0) ? EXIT_SUCCESS : EXIT_FAILURE;
+} /* end main */
 
-/*  
+/*!
  * Parse command line options to get relaxed snode size, panel size, etc.
  */
 static void

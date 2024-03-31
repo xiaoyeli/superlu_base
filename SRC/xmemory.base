@@ -98,15 +98,14 @@ void @(pre)user_free(int bytes, int which_end, GlobalLU_t *Glu)
 
 
 
-/*! \brief 
+/*!
+ * Calculate memory usage
  *
- * <pre>
- * mem_usage consists of the following fields:
- *    - for_lu (float)
- *      The amount of space used in bytes for the L\U data structures.
- *    - total_needed (float)
+ * \param mem_usage consists of the following fields:
+ *    - <tt>for_lu (float)</tt>
+ *      The amount of space used in bytes for the L\\U data structures.
+ *    - <tt>total_needed (float)</tt>
  *      The amount of space needed in bytes to perform factorization.
- * </pre>
  */
 int @(pre)QuerySpace(SuperMatrix *L, SuperMatrix *U, mem_usage_t *mem_usage)
 {
@@ -136,15 +135,15 @@ int @(pre)QuerySpace(SuperMatrix *L, SuperMatrix *U, mem_usage_t *mem_usage)
 } /* @(pre)QuerySpace */
 
 
-/*! \brief
+/*!
+ * Calculate memory usage
  *
- * <pre>
- * mem_usage consists of the following fields:
- *    - for_lu (float)
- *      The amount of space used in bytes for the L\U data structures.
- *    - total_needed (float)
+ * \param mem_usage consists of the following fields:
+ *    - <tt>for_lu (float)</tt>
+ *      The amount of space used in bytes for the L\\U data structures.
+ *    - <tt>total_needed (float)</tt>
  *      The amount of space needed in bytes to perform factorization.
- * </pre>
+ *
  */
 int ilu_@(pre)QuerySpace(SuperMatrix *L, SuperMatrix *U, mem_usage_t *mem_usage)
 {
@@ -333,8 +332,10 @@ int_t
     
 } /* @(pre)LUMemInit */
 
-/*! \brief Allocate known working storage. Returns 0 if success, otherwise
-   returns the number of bytes allocated so far when failure occurred. */
+/*! \brief Allocate known working storage.
+ * Returns 0 if success, otherwise
+ * returns the number of bytes allocated so far when failure occurred.
+ */
 int
 @(pre)LUWorkInit(int m, int n, int panel_size, int **iworkptr, 
             @(type) **dworkptr, GlobalLU_t *Glu)
@@ -369,7 +370,7 @@ int
 	    *dworkptr = (@(type)*) ((double*)*dworkptr - 1);
 	    extra = (char*)old_ptr - (char*)*dworkptr;
 #if ( DEBUGlevel>=1 )
-	    printf("@(pre)LUWorkInit: not aligned, extra %d\n", extra);
+	    printf("@(pre)LUWorkInit: not aligned, extra %d\n", extra); fflush(stdout);
 #endif	    
 	    Glu->stack.top2 -= extra;
 	    Glu->stack.used += extra;
@@ -381,7 +382,7 @@ int
     }
 	
     return 0;
-}
+} /* end @(pre)LUWorkInit */
 
 
 /*! \brief Set up pointers for real working arrays.
@@ -439,7 +440,7 @@ int_t
     void   *new_mem;
     
 #if ( DEBUGlevel>=1 ) 
-    printf("@(pre)LUMemXpand(): jcol %d, next %lld, maxlen %lld, MemType %d\n",
+    printf("@(pre)LUMemXpand[1]: jcol %d, next %lld, maxlen %lld, MemType %d\n",
 	   jcol, (long long) next, (long long) *maxlen, mem_type);
 #endif    
 
@@ -545,7 +546,9 @@ void
 	expanders[type].mem = (void *) new_mem;
 	
     } else { /* MemModel == USER */
-	if ( Glu->num_expansions == 0 ) {
+    
+	if ( Glu->num_expansions == 0 ) { /* First time initialization */
+	
 	    new_mem = @(pre)user_malloc(new_len * lword, HEAD, Glu);
 	    if ( NotDoubleAlign(new_mem) &&
 		(type == LUSUP || type == UCOL) ) {
@@ -558,8 +561,11 @@ void
 		Glu->stack.top1 += extra;
 		Glu->stack.used += extra;
 	    }
+	    
 	    expanders[type].mem = (void *) new_mem;
-	} else {
+	    
+	} else { /* CASE: num_expansions != 0 */
+	
 	    tries = 0;
 	    extra = (new_len - *prev_len) * lword;
 	    if ( keep_prev ) {
@@ -573,7 +579,11 @@ void
 		}
 	    }
 
-	    if ( type != USUB ) {
+	      /* Need to expand the memory: moving the content after the current MemType
+	      	 to make extra room for the current MemType.
+              	 Memory layout: [ LUSUP || UCOL || LSUB || USUB ]
+	      */
+  	    if ( type != USUB ) {
 		new_mem = (void*)((char*)expanders[type + 1].mem + extra);
 		bytes_to_copy = (char*)Glu->stack.array + Glu->stack.top1
 		    - (char*)expanders[type + 1].mem;
@@ -598,7 +608,7 @@ void
 		    Glu->stack.used += extra;
 		}
 		
-	    } /* if ... */
+	    } /* end expansion */
 
 	} /* else ... */
     }
@@ -673,13 +683,21 @@ void
 void
 @(pre)allocateA(int n, int_t nnz, @(type) **a, int_t **asub, int_t **xa)
 {
+@precision SCOMPLEX
+    *a    = (@(type) *) complexMalloc(nnz);
+@precision SINGLE DOUBLE DCOMPLEX
     *a    = (@(type) *) @(type)Malloc(nnz);
+@precision !    
     *asub = (int_t *) intMalloc(nnz);
     *xa   = (int_t *) intMalloc(n+1);
 }
 
 
+@precision SCOMPLEX
+@(type) *complexMalloc(size_t n)
+@precision SINGLE DOUBLE DCOMPLEX
 @(type) *@(type)Malloc(size_t n)
+@precision !
 {
     @(type) *buf;
     buf = (@(type) *) SUPERLU_MALLOC(n * (size_t) sizeof(@(type))); 
@@ -689,7 +707,11 @@ void
     return (buf);
 }
 
+@precision SCOMPLEX
+@(type) *complexCalloc(size_t n)
+@precision SINGLE DOUBLE DCOMPLEX
 @(type) *@(type)Calloc(size_t n)
+@precision !
 {
     @(type) *buf;
     register size_t i;
