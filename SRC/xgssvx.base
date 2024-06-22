@@ -548,8 +548,8 @@ printf("dgssvx: Fact=%4d, Trans=%4d, equed=%c\n",
 	}
     }
 
-    if ( *info > 0 ) {
-        if ( *info <= A->ncol ) {
+    if ( *info > 0 ) { 
+        if ( *info <= A->ncol ) { /* singular */
 	    /* Compute the reciprocal pivot growth factor of the leading
 	       rank-deficient (*info) columns of A. */
 	    *recip_pivot_growth = @(pre)PivotGrowth(*info, AA, perm_c, L, U);

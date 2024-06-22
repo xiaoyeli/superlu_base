@@ -186,8 +186,14 @@ void
 			       Astore->nzval, Astore->colind, Astore->rowptr,
 			       SLU_NC, A->Dtype, A->Mtype);
 	trans = TRANS;
-    } else {
-        if ( A->Stype == SLU_NC ) AA = A;
+    } else if ( A->Stype == SLU_NC ) {
+        AA = A;
+    }
+    /* A is of unsupported matrix format. */
+    else {
+        AA = NULL;
+        *info = 1;
+        input_error("@(pre)gssv", &i);
     }
 
     t = SuperLU_timer_();
@@ -226,9 +232,12 @@ void
         /* Solve the system A*X=B, overwriting B with X. */
 	int info1;
         @(pre)gstrs (trans, L, U, perm_c, perm_r, B, stat, &info1);
-    } else {
+    }
+#if ( PRNTlevel>=1 )
+     else {
         printf("@(pre)gstrf info %lld\n", (long long) *info); fflush(stdout);
     }
+#endif
     
     utime[SOLVE] = SuperLU_timer_() - t;
 
