@@ -567,7 +567,7 @@ void
 		    drop_sum *= omega;
                 }
 @precision SCOMPLEX DCOMPLEX
-		if (drop_sum.r != 0.0 && drop_sum.i != 0.0)
+		if (drop_sum.r != 0.0 || drop_sum.i != 0.0)
 		{
                     omega = SUPERLU_MIN(2.0*(1.0-alpha)/@(pre)_abs1(&drop_sum), 1.0);
                     @(pre)@(mod_pre)_mult(&drop_sum, &drop_sum, omega);

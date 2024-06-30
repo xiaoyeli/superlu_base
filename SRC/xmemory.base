@@ -683,21 +683,13 @@ void
 void
 @(pre)allocateA(int n, int_t nnz, @(type) **a, int_t **asub, int_t **xa)
 {
-@precision SCOMPLEX
-    *a    = (@(type) *) complexMalloc(nnz);
-@precision SINGLE DOUBLE DCOMPLEX
     *a    = (@(type) *) @(type)Malloc(nnz);
-@precision !    
     *asub = (int_t *) intMalloc(nnz);
     *xa   = (int_t *) intMalloc(n+1);
 }
 
 
-@precision SCOMPLEX
-@(type) *complexMalloc(size_t n)
-@precision SINGLE DOUBLE DCOMPLEX
 @(type) *@(type)Malloc(size_t n)
-@precision !
 {
     @(type) *buf;
     buf = (@(type) *) SUPERLU_MALLOC(n * (size_t) sizeof(@(type))); 
@@ -707,11 +699,7 @@ void
     return (buf);
 }
 
-@precision SCOMPLEX
-@(type) *complexCalloc(size_t n)
-@precision SINGLE DOUBLE DCOMPLEX
 @(type) *@(type)Calloc(size_t n)
-@precision !
 {
     @(type) *buf;
     register size_t i;

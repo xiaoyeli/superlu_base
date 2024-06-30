@@ -1,8 +1,3 @@
-@extract -b Typedef.inc
-/*! @file @(pre)fgmr.c
- * \brief flexible GMRES from ITSOL developed by Yousef Saad.
- */
-
 /* ITSOL COPYRIGHT
 
 Copyright (C) 2006, the University of Minnesota 
@@ -28,7 +23,14 @@ General Public License for more details.
 
 For information on ITSOL contact saad@cs.umn.edu
 */
-#include <unistd.h>
+@extract -b Typedef.inc
+
+/*! \file
+ * \brief Flexible GMRES from ITSOL developed by Yousef Saad.
+ *
+ * \ingroup Example
+ */
+
 #include "slu_@(pre)defs.h"
 
 #define  epsmac  1.0e-16
@@ -41,7 +43,30 @@ extern void @(pre)dotc_(@(type) *, int *, @(type) [], int *, @(type) [], int *);
 extern @(mod_type) @(mod_pre)@(pre)nrm2_(int *, @(type) [], int *);
 @precision !
 
-
+/*!
+ * \brief Simple version of the ARMS preconditioned FGMRES algorithm.
+ *
+ *  Y. S. Dec. 2000. -- Apr. 2008
+ *
+ *  internal work arrays:
+ *  vv      = work array of length [im+1][n] (used to store the Arnoldi
+ *            basis)
+ *  hh      = work array of length [im][im+1] (Householder matrix)
+ *  z       = work array of length [im][n] to store preconditioned vectors
+ *
+ * \param [in] n         Dimension of vectors and matrices.
+ * \param [in] @(pre)matvec   Operation for matrix-vector multiplication.
+ * \param [in] @(pre)psolve   (right) preconditioning operation. Can be a NULL pointer (GMRES without preconditioner)
+ * \param [in] rhs       Real vector of length n containing the right hand side.
+ * \param [in,out] sol   In: Real vector of length n containing an initial guess to the solution on input.
+ *                       Out: Contains an approximate solution (upon successful return).
+ * \param [in] tol       Tolerance for stopping iteration
+ * \param [in] im        Krylov subspace dimension
+ * \param [in,out] itmax In: max number of iterations allowed.
+ *                       Out: number of steps required to converge.
+ * \param [in] fits      If NULL, no output. If not NULL, file handle to output "resid vs time and its".
+ * \return Whether the algorithm finished successfully.
+ */
 int @(pre)fgmr(int n,
      void (*@(pre)matvec) (@(type), @(type)[], @(type), @(type)[]),
      void (*@(pre)psolve) (int, @(type)[], @(type)[]),
@@ -88,10 +113,10 @@ int @(pre)fgmr(int n,
 +---------------------------------------------------------------------*/
 
     int maxits = *itmax;
-    int i, i1, ii, j, k, k1, its, retval, i_1 = 1, i_2 = 2;
-    @(mod_type) beta, eps1 = 0.0, t, t0, gam;
+    int its, i_1 = 1, i_2 = 2;
+    @(mod_type) eps1 = 0.0;
     @(type) **hh, *c, *s, *rs;
-    @(type) **vv, **z, tt;
+    @(type) **vv, **z;
 @precision SINGLE DOUBLE
     @(type) zero = 0.0;
     @(type) one = 1.0;
@@ -107,10 +132,10 @@ int @(pre)fgmr(int n,
 
     its = 0;
     vv = (@(type) **)SUPERLU_MALLOC((im + 1) * sizeof(@(type) *));
-    for (i = 0; i <= im; i++) vv[i] = @(type)Malloc(n);
+    for (int i = 0; i <= im; i++) vv[i] = @(type)Malloc(n);
     z = (@(type) **)SUPERLU_MALLOC(im * sizeof(@(type) *));
     hh = (@(type) **)SUPERLU_MALLOC(im * sizeof(@(type) *));
-    for (i = 0; i < im; i++)
+    for (int i = 0; i < im; i++)
     {
 	hh[i] = @(type)Malloc(i + 2);
 	z[i] = @(type)Malloc(n);
@@ -125,13 +150,13 @@ int @(pre)fgmr(int n,
 	/*---- compute initial residual vector ----*/
 	@(pre)matvec(one, sol, zero, vv[0]);
 @precision SINGLE DOUBLE
-	for (j = 0; j < n; j++)
+	for (int j = 0; j < n; j++)
 	    vv[0][j] = rhs[j] - vv[0][j];	/* vv[0]= initial residual */
-	beta = @(pre)nrm2_(&n, vv[0], &i_1);
+	@(mod_type) beta = @(pre)nrm2_(&n, vv[0], &i_1);
 @precision SCOMPLEX DCOMPLEX
-	for (j = 0; j < n; j++)
+	for (int j = 0; j < n; j++)
 	    @(pre)_sub(&vv[0][j], &rhs[j], &vv[0][j]);	/* vv[0]= initial residual */
-	beta = @(mod_pre)@(pre)nrm2_(&n, vv[0], &i_1);
+	@(mod_type) beta = @(mod_pre)@(pre)nrm2_(&n, vv[0], &i_1);
 @precision !
 
 	/*---- print info if fits != null ----*/
@@ -144,10 +169,10 @@ int @(pre)fgmr(int n,
 	if ( !(beta > tol * @(mod_pre)@(pre)nrm2_(&n, rhs, &i_1)) )
 @precision !
 	    break;
-	t = 1.0 / beta;
+	@(mod_type) t = 1.0 / beta;
 
 	/*---- normalize: vv[0] = vv[0] / beta ----*/
-	for (j = 0; j < n; j++)
+	for (int j = 0; j < n; j++)
 @precision SINGLE DOUBLE
 	    vv[0][j] = vv[0][j] * t;
 @precision SCOMPLEX DCOMPLEX
@@ -163,10 +188,11 @@ int @(pre)fgmr(int n,
 	rs[0].r = beta;
 	rs[0].i = 0.0;
 @precision !
+	int i = 0;
 	for (i = 0; i < im; i++)
 	{
 	    its++;
-	    i1 = i + 1;
+	    int i1 = i + 1;
 
 	    /*------------------------------------------------------------
 	    |  (Right) Preconditioning Operation   z_{j} = M^{-1} v_{j}
@@ -185,23 +211,23 @@ int @(pre)fgmr(int n,
 	    |     w  = w - h_{i,j} v_{i}
 	    +------------------------------------------------------------*/
 @precision SINGLE DOUBLE
-	    t0 = @(pre)nrm2_(&n, vv[i1], &i_1);
+	    @(mod_type) t0 = @(pre)nrm2_(&n, vv[i1], &i_1);
 @precision SCOMPLEX DCOMPLEX
-	    t0 = @(mod_pre)@(pre)nrm2_(&n, vv[i1], &i_1);
+	    @(mod_type) t0 = @(mod_pre)@(pre)nrm2_(&n, vv[i1], &i_1);
 @precision !
-	    for (j = 0; j <= i; j++)
+	    for (int j = 0; j <= i; j++)
 	    {
 		@(type) negt;
 @precision SINGLE DOUBLE
-		tt = @(pre)dot_(&n, vv[j], &i_1, vv[i1], &i_1);
+		@(type) tt = @(pre)dot_(&n, vv[j], &i_1, vv[i1], &i_1);
 		hh[i][j] = tt;
 		negt = -tt;
 @precision SCOMPLEX DCOMPLEX
 #if 0
 		@(pre)dotc_(&tt, &n, vv[j], &i_1, vv[i1], &i_1);
 #else
-		tt = zero;
-		for (k = 0; k < n; ++k) {
+		@(type) tt = zero;
+		for (int k = 0; k < n; ++k) {
 		    @(pre)@(pre)_conj(&tt1, &vv[j][k]);
 		    @(pre)@(pre)_mult(&tt2, &tt1, &vv[i1][k]);
 		    @(pre)_add(&tt, &tt, &tt2);
@@ -223,19 +249,19 @@ int @(pre)fgmr(int n,
 	    while (t < 0.5 * t0)
 	    {
 		t0 = t;
-		for (j = 0; j <= i; j++)
+		for (int j = 0; j <= i; j++)
 		{
 		    @(type) negt;
 @precision SINGLE DOUBLE
-		    tt = @(pre)dot_(&n, vv[j], &i_1, vv[i1], &i_1);
+		    @(type) tt = @(pre)dot_(&n, vv[j], &i_1, vv[i1], &i_1);
 		    hh[i][j] += tt;
 		    negt = -tt;
 @precision SCOMPLEX DCOMPLEX
 #if 0
 		    @(pre)dotc_(&tt, &n, vv[j], &i_1, vv[i1], &i_1);
 #else
-   	            tt = zero;
-		    for (k = 0; k < n; ++k) {
+   	            @(type) tt = zero;
+		    for (int k = 0; k < n; ++k) {
 		        @(pre)@(pre)_conj(&tt1, &vv[j][k]);
 		        @(pre)@(pre)_mult(&tt2, &tt1, &vv[i1][k]);
 		        @(pre)_add(&tt, &tt, &tt2);
@@ -265,7 +291,7 @@ int @(pre)fgmr(int n,
 	    {
 		/*---- v_{j+1} = w / h_{j+1,j} ----*/
 		t = 1.0 / t;
-		for (k = 0; k < n; k++)
+		for (int k = 0; k < n; k++)
 @precision SINGLE DOUBLE
 		    vv[i1][k] = vv[i1][k] * t;
 @precision SCOMPLEX DCOMPLEX
@@ -280,10 +306,10 @@ int @(pre)fgmr(int n,
 	    /*--------------------------------------------------------
 	    |   perform previous transformations  on i-th column of h
 	    +-------------------------------------------------------*/
-	    for (k = 1; k <= i; k++)
+	    for (int k = 1; k <= i; k++)
 	    {
-		k1 = k - 1;
-		tt = hh[i][k1];
+		int k1 = k - 1;
+		@(type) tt = hh[i][k1];
 @precision SINGLE DOUBLE
 		hh[i][k1] = c[k1] * tt + s[k1] * hh[i][k];
 		hh[i][k] = -s[k1] * tt + c[k1] * hh[i][k];
@@ -299,9 +325,9 @@ int @(pre)fgmr(int n,
 	    }
 
 @precision SINGLE DOUBLE
-	    gam = sqrt(pow(hh[i][i], 2) + pow(hh[i][i1], 2));
+	    @(type) gam = sqrt(pow(hh[i][i], 2) + pow(hh[i][i1], 2));
 @precision SCOMPLEX DCOMPLEX
-	    gam = @(mod_pre)@(pre)nrm2_(&i_2, &hh[i][i], &i_1);
+	    @(mod_type) gam = @(mod_pre)@(pre)nrm2_(&i_2, &hh[i][i], &i_1);
 @precision !
 @precision IGNORED compelx
             @(pre)@(pre)_mult(&tt1, &hh[i][i], &hh[i][i]);
@@ -370,17 +396,16 @@ int @(pre)fgmr(int n,
 	@(pre)_div(&rs[i], &rs[i], &hh[i][i]);
 @precision !
 
-	for (ii = 1; ii <= i; ii++)
+	for (int ii = 1; ii <= i; ii++)
 	{
-	    k = i - ii;
-	    k1 = k + 1;
-	    tt = rs[k];
+	    int k = i - ii;
+	    @(type) tt = rs[k];
 @precision SINGLE DOUBLE
-	    for (j = k1; j <= i; j++)
+	    for (int j = k + 1; j <= i; j++)
 		tt = tt - hh[j][k] * rs[j];
 	    rs[k] = tt / hh[k][k];
 @precision SCOMPLEX DCOMPLEX
-	    for (j = k1; j <= i; j++) {
+	    for (int j = k + 1; j <= i; j++) {
                 @(pre)@(pre)_mult(&tt1, &hh[j][k], &rs[j]);
 		@(pre)_sub(&tt, &tt, &tt1);
             }
@@ -389,14 +414,14 @@ int @(pre)fgmr(int n,
 	}
 
 	/*---- linear combination of v[i]'s to get sol. ----*/
-	for (j = 0; j <= i; j++)
+	for (int j = 0; j <= i; j++)
 	{
-	    tt = rs[j];
+	    @(type) tt = rs[j];
 @precision SINGLE DOUBLE
-	    for (k = 0; k < n; k++)
+	    for (int k = 0; k < n; k++)
 		sol[k] += tt * z[j][k];
 @precision SCOMPLEX DCOMPLEX
-	    for (k = 0; k < n; k++) {
+	    for (int k = 0; k < n; k++) {
                 @(pre)@(pre)_mult(&tt1, &tt, &z[j][k]);
 		@(pre)_add(&sol[k], &sol[k], &tt1);
             }
@@ -405,7 +430,7 @@ int @(pre)fgmr(int n,
 
 	/* calculate the residual and output */
 	@(pre)matvec(one, sol, zero, vv[0]);
-	for (j = 0; j < n; j++)
+	for (int j = 0; j < n; j++)
 @precision SINGLE DOUBLE
 	    vv[0][j] = rhs[j] - vv[0][j];	/* vv[0]= initial residual */
 @precision SCOMPLEX DCOMPLEX
@@ -430,11 +455,11 @@ int @(pre)fgmr(int n,
 	    break;
     } while(its < maxits);
 
-    retval = (its >= maxits);
-    for (i = 0; i <= im; i++)
+    int retval = (its >= maxits);
+    for (int i = 0; i <= im; i++)
 	SUPERLU_FREE(vv[i]);
     SUPERLU_FREE(vv);
-    for (i = 0; i < im; i++)
+    for (int i = 0; i < im; i++)
     {
 	SUPERLU_FREE(hh[i]);
 	SUPERLU_FREE(z[i]);

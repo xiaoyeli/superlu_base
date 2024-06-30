@@ -1,4 +1,4 @@
-/*! \file
+/*
 Copyright (c) 2003, The Regents of the University of California, through
 Lawrence Berkeley National Laboratory (subject to receipt of any required 
 approvals from U.S. Dept. of Energy) 
@@ -9,14 +9,15 @@ The source code is distributed under BSD license, see the file License.txt
 at the top-level directory.
 */
 @extract -b Typedef.inc
-/*! @file @(pre)itersol.c
- * \brief Example #1 showing how to use ILU to precondition GMRES
- *
- * <pre>
+/*
  * -- SuperLU routine (version 5.0) --
  * Lawrence Berkeley National Laboratory
  * November, 2010
  * August, 2011
+ */
+
+/*! @file @(pre)itersol.c
+ * \brief Example #1 showing how to use ILU to precondition GMRES
  *
  * This example shows that ILU is computed from the equilibrated matrix,
  * and the preconditioned GMRES is applied to the equilibrated system.
@@ -34,7 +35,7 @@ at the top-level directory.
  *   1) Apply preconditioner M^{-1} = Pc^T*U^{-1}*L^{-1}*Pr
  *   2) Matrix-vector multiplication: w = A1*v
  * 
- * </pre>
+ * \ingroup Example
  */
 
 #include <unistd.h>
@@ -47,10 +48,16 @@ SuperMatrix *GLOBAL_A, *GLOBAL_L, *GLOBAL_U;
 SuperLUStat_t *GLOBAL_STAT;
 mem_usage_t   *GLOBAL_MEM_USAGE;
 
-void @(pre)psolve(int n,
-                  @(type) x[], /* solution */
-                  @(type) y[]  /* right-hand side */
-)
+/*!
+ * \brief Performs @(pre)gsisx with original matrix A.
+ *
+ * See documentation of @(pre)gsisx for more details.
+ *
+ * \param [in] n     Dimension of matrices
+ * \param [out] x    Solution
+ * \param [in,out] y Right-hand side
+ */
+void @(pre)psolve(int n, @(type) x[], @(type) y[])
 {
     SuperMatrix *A = GLOBAL_A, *L = GLOBAL_L, *U = GLOBAL_U;
     SuperLUStat_t *stat = GLOBAL_STAT;
@@ -80,6 +87,19 @@ void @(pre)psolve(int n,
 #endif
 }
 
+
+/*!
+ * \brief Performs matrix-vector multipliation sp_@(pre)gemv with original matrix A.
+ *
+ * The operations is y := alpha*A*x + beta*y. See documentation of sp_@(pre)gemv
+ * for further details.
+ *
+ * \param [in] alpha Scalar factor for A*x
+ * \param [in] x Vector to multiply with A
+ * \param [in] beta Scalar factor for y
+ * \param [in,out] y Vector to add to to matrix-vector multiplication and
+ *                   storage for result.
+ */
 void @(pre)matvec_mult(@(type) alpha, @(type) x[], @(type) beta, @(type) y[])
 {
     SuperMatrix *A = GLOBAL_A;
@@ -99,7 +119,6 @@ int main(int argc, char *argv[])
     extern int @(pre)fill_diag(int n, NCformat *Astore);
 
     char     equed[1] = {'B'};
-    yes_no_t equil;
     trans_t  trans;
     SuperMatrix A, L, U;
     SuperMatrix B, X;
@@ -118,10 +137,9 @@ int main(int argc, char *argv[])
     @(type)   *rhsb, *rhsx, *xact;
     @(type)   *work = NULL;
     @(mod_type)   *R, *C;
-    @(mod_type)   u, rpg, rcond;
+    @(mod_type)   rpg, rcond;
 @precision SINGLE DOUBLE
     @(type) zero = 0.0;
-    @(type) one = 1.0;
 @precision SCOMPLEX DCOMPLEX
     @(type) zero = {0.0, 0.0};
     @(type) one = {1.0, 0.0};
@@ -132,8 +150,6 @@ int main(int argc, char *argv[])
     SuperLUStat_t stat;
     FILE 	  *fp = stdin;
 
-    int restrt, iter, maxit, i;
-    double resid;
     @(type) *x, *b;
 
 #ifdef DEBUG
@@ -187,7 +203,7 @@ int main(int argc, char *argv[])
 		"-r -rb:\n\t[INPUT] is a Rutherford-Boeing format matrix.\n"
 		"-t -triplet:\n\t[INPUT] is a triplet format matrix.\n",
 		argv[0]);
-	return 0;
+        return EXIT_FAILURE;
     }
     else
     {
@@ -210,7 +226,7 @@ int main(int argc, char *argv[])
 		break;
 	    default:
 		printf("Unrecognized format.\n");
-		return 0;
+		return EXIT_FAILURE;
 	}
     }
 
@@ -258,12 +274,12 @@ int main(int argc, char *argv[])
     if (!(b = @(type)Malloc(m))) ABORT("Malloc fails for b[].");
     if (*equed == 'R' || *equed == 'B') {
 @precision SINGLE DOUBLE
-	for (i = 0; i < n; ++i) b[i] = rhsb[i] * R[i];
+	for (int i = 0; i < n; ++i) b[i] = rhsb[i] * R[i];
 @precision SCOMPLEX DCOMPLEX
-	for (i = 0; i < n; ++i) @(pre)@(mod_pre)_mult(&b[i], &rhsb[i], R[i]);
+	for (int i = 0; i < n; ++i) @(pre)@(mod_pre)_mult(&b[i], &rhsb[i], R[i]);
 @precision !
     } else {
-	for (i = 0; i < m; i++) b[i] = rhsb[i];
+	for (int i = 0; i < m; i++) b[i] = rhsb[i];
     }
 
     printf("@(pre)gsisx(): info %lld, equed %c\n", (long long)info, equed[0]);
@@ -310,13 +326,13 @@ int main(int argc, char *argv[])
     options.ConditionNumber = NO;
 
     /* Set the variables used by GMRES. */
-    restrt = SUPERLU_MIN(n / 3 + 1, 50);
-    maxit = 1000;
-    iter = maxit;
+    int restrt = SUPERLU_MIN(n / 3 + 1, 50);
+    int maxit = 1000;
+    int iter = maxit;
 @precision DOUBLE DCOMPLEX
-    resid = 1e-8;
+    double resid = 1e-8;
 @precision SINGLE SCOMPLEX
-    resid = 1e-4;
+    double resid = 1e-4;
 @precision !
     if (!(x = @(type)Malloc(n))) ABORT("Malloc fails for x[].");
 
@@ -324,16 +340,16 @@ int main(int argc, char *argv[])
     {
 	int i_1 = 1, nnz32;
 	double maxferr = 0.0, nrmA, nrmB, res, t;
-        @(type) temp;
 @precision SINGLE DOUBLE
 	extern @(mod_type) @(pre)nrm2_(int *, @(type) [], int *);
 @precision SCOMPLEX DCOMPLEX
+        @(type) temp;
 	extern @(mod_type) @(mod_pre)@(pre)nrm2_(int *, @(type) [], int *);
 @precision !
 	extern void @(pre)axpy_(int *, @(type) *, @(type) [], int *, @(type) [], int *);
 
 	/* Initial guess */
-	for (i = 0; i < n; i++) x[i] = zero;
+	for (int i = 0; i < n; i++) x[i] = zero;
 
 	t = SuperLU_timer_();
 
@@ -345,13 +361,13 @@ int main(int argc, char *argv[])
 	/* Output the result. */
 	nnz32 = Astore->nnz;
 @precision SINGLE DOUBLE
-	nrmA = @(pre)nrm2_(&nnz32, (@(type) *)((DNformat *)A.Store)->nzval,
+	nrmA = @(pre)nrm2_(&nnz32, (@(type) *)((NCformat *)A.Store)->nzval,
 		&i_1);
 	nrmB = @(pre)nrm2_(&m, b, &i_1);
 	sp_@(pre)gemv("N", -1.0, &A, x, 1, 1.0, b, 1);
 	res = @(pre)nrm2_(&m, b, &i_1);
 @precision SCOMPLEX DCOMPLEX
-	nrmA = @(mod_pre)@(pre)nrm2_(&nnz32, (@(type) *)((DNformat *)A.Store)->nzval,
+	nrmA = @(mod_pre)@(pre)nrm2_(&nnz32, (@(type) *)((NCformat *)A.Store)->nzval,
 		&i_1);
 	nrmB = @(mod_pre)@(pre)nrm2_(&m, b, &i_1);
 	sp_@(pre)gemv("N", none, &A, x, 1, one, b, 1);
@@ -372,12 +388,12 @@ int main(int argc, char *argv[])
 	/* Scale the solution back if equilibration was performed. */
 	if (*equed == 'C' || *equed == 'B') 
 @precision SINGLE DOUBLE
-	    for (i = 0; i < n; i++) x[i] *= C[i];
+	    for (int i = 0; i < n; i++) x[i] *= C[i];
 @precision SCOMPLEX DCOMPLEX
-	    for (i = 0; i < n; i++) @(pre)@(mod_pre)_mult(&x[i], &x[i], C[i]);
+	    for (int i = 0; i < n; i++) @(pre)@(mod_pre)_mult(&x[i], &x[i], C[i]);
 @precision !
 
-	for (i = 0; i < m; i++) {
+	for (int i = 0; i < m; i++) {
 @precision DOUBLE SINGLE
 	    maxferr = SUPERLU_MAX(maxferr, fabs(x[i] - xact[i]));
 @precision DCOMPLEX SCOMPLEX
@@ -418,5 +434,5 @@ int main(int argc, char *argv[])
     CHECK_MALLOC("Exit main()");
 #endif
 
-    return 0;
+    return EXIT_SUCCESS;
 }

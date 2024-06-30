@@ -239,11 +239,11 @@ extern int_t   @(pre)LUMemXpand (int, int_t, MemType, int_t *, GlobalLU_t *);
 extern @(type)  *@(type)Malloc(size_t);
 extern @(type)  *@(type)Calloc(size_t);
 @precision SCOMPLEX
-extern float  *floatMalloc(int);
-extern float  *floatCalloc(int);
+extern float  *floatMalloc(size_t);
+extern float  *floatCalloc(size_t);
 @precision DCOMPLEX
-extern double  *doubleMalloc(int);
-extern double  *doubleCalloc(int);
+extern double  *doubleMalloc(size_t);
+extern double  *doubleCalloc(size_t);
 @precision !
 extern int_t   @(pre)memory_usage(const int_t, const int_t, const int_t, const int);
 extern int     @(pre)QuerySpace (SuperMatrix *, SuperMatrix *, mem_usage_t *);

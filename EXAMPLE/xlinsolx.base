@@ -1,4 +1,4 @@
-/*! \file
+/*
 Copyright (c) 2003, The Regents of the University of California, through
 Lawrence Berkeley National Laboratory (subject to receipt of any required 
 approvals from U.S. Dept. of Energy) 
@@ -16,9 +16,19 @@ at the top-level directory.
  * August 1, 2008
  *
  */
-#include <unistd.h>
+
+/*! \file
+ * \brief LU factorization from @(PRE)GSTRF (@(PRE)GSSVX)
+ *
+ * \ingroup Example
+ */
+
+#include <getopt.h>
 #include "slu_@(pre)defs.h"
 
+void parse_command_line(int argc, char *argv[], int *lwork,
+                        @(mod_type) *u, yes_no_t *equil, trans_t *trans);
+			
 int main(int argc, char *argv[])
 {
     char           equed[1];
@@ -36,10 +46,10 @@ int main(int argc, char *argv[])
     int            *perm_r; /* row permutations from partial pivoting */
     int            *perm_c; /* column permutation vector */
     int            *etree;
-    void           *work;
+    void           *work = NULL;
     int            nrhs, ldx;
     int_t          info, lwork, nnz;
-    int            i, m, n;
+    int            m, n;
     @(type)         *rhsb, *rhsx, *xact;
     @(mod_type)         *R, *C;
     @(mod_type)         *ferr, *berr;
@@ -48,8 +58,6 @@ int main(int argc, char *argv[])
     superlu_options_t options;
     SuperLUStat_t stat;
     FILE           *fp = stdin;
-
-    extern void  parse_command_line();
 
 #if ( DEBUGlevel>=1 )
     CHECK_MALLOC("Enter main()");
@@ -143,6 +151,7 @@ int main(int argc, char *argv[])
 
         /* This is how you could access the solution matrix. */
         @(type) *sol = (@(type)*) ((DNformat*) X.Store)->nzval; 
+        (void)sol;  // suppress unused variable warning
 
 	if ( options.PivotGrowth == YES )
             printf("Recip. pivot growth = %e\n", rpg);
@@ -151,7 +160,7 @@ int main(int argc, char *argv[])
 	if ( options.IterRefine != NOREFINE ) {
             printf("Iterative Refinement:\n");
 	    printf("%8s%8s%16s%16s\n", "rhs", "Steps", "FERR", "BERR");
-	    for (i = 0; i < nrhs; ++i)
+	    for (int i = 0; i < nrhs; ++i)
 	      printf("%8d%8d%16e%16e\n", i+1, stat.RefineSteps, ferr[i], berr[i]);
 	}
         Lstore = (SCformat *) L.Store;
@@ -196,11 +205,13 @@ int main(int argc, char *argv[])
 #if ( DEBUGlevel>=1 )
     CHECK_MALLOC("Exit main()");
 #endif
+
+    return EXIT_SUCCESS;
 }
 
 
-/*  
- * Parse command line inputs.
+/*!
+ * \brief Parse command line inputs.
  */
 void
 parse_command_line(int argc, char *argv[], int_t *lwork,

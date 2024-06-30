@@ -168,11 +168,7 @@ int main(int argc, char *argv[])
 	nnz = n * n;        /* upper bound */
 	fimat = 1;
 	nimat = NTYPES;
-@precision SCOMPLEX
-	Afull = (@(type) *) complexCalloc(lda * n);
-@precision SINGLE DOUBLE DCOMPLEX
 	Afull = @(type)Calloc(lda * n);
-@precision !	
 	@(pre)allocateA(n, nnz, &a, &asub, &xa);
     } else {
 	/* Read a sparse matrix */
@@ -181,19 +177,11 @@ int main(int argc, char *argv[])
     }
 
     @(pre)allocateA(n, nnz, &a_save, &asub_save, &xa_save);
-@precision SCOMPLEX
-    rhsb = (@(type) *) complexMalloc(m * nrhs);
-    bsav = (@(type) *) complexMalloc(m * nrhs);
-    solx = (@(type) *) complexMalloc(n * nrhs);
-    xact = (@(type) *) complexMalloc(n * nrhs);
-    wwork = (@(type) *) complexCalloc( SUPERLU_MAX(m,n) * SUPERLU_MAX(4,nrhs) );
-@precision SINGLE DOUBLE DCOMPLEX
     rhsb = @(type)Malloc(m * nrhs);
     bsav = @(type)Malloc(m * nrhs);
     solx = @(type)Malloc(n * nrhs);
     xact = @(type)Malloc(n * nrhs);
     wwork = @(type)Calloc( SUPERLU_MAX(m,n) * SUPERLU_MAX(4,nrhs) );
-@precision !
 
     ldb  = m;
     ldx  = n;
