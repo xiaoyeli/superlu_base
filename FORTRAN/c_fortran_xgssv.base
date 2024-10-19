@@ -31,7 +31,7 @@ c_fortran_@(pre)gssv_(int *iopt, int *n, int_t *nnz, int *nrhs,
 		 int_t *info)
 
 {
-/* 
+/*!
  * This routine can be called from Fortran.
  *
  * iopt (input) int
@@ -44,7 +44,6 @@ c_fortran_@(pre)gssv_(int *iopt, int *n, int_t *nnz, int *nrhs,
  *      If iopt == 1, it is an output and contains the pointer pointing to
  *                    the structure of the factored matrices.
  *      Otherwise, it it an input.
- *
  */
  
     SuperMatrix A, AC, B;
@@ -61,7 +60,7 @@ c_fortran_@(pre)gssv_(int *iopt, int *n, int_t *nnz, int *nrhs,
     SuperLUStat_t stat;
     factors_t *LUfactors;
     GlobalLU_t Glu;   /* Not needed on return. */
-    int_t    *rowind0;  /* counter 1-based indexing from Frotran arrays. */
+    int_t    *rowind0;  /* counter 1-based indexing from Fortran arrays. */
     int_t    *colptr0;  
 
     trans = NOTRANS;

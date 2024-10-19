@@ -13,10 +13,11 @@ at the top-level directory.
  * \brief Solves the system of linear equations A*X=B or A'*X=B
  *
  * <pre>
- * -- SuperLU routine (version 3.0) --
+ * -- SuperLU routine (version 7.0.0) --
  * Univ. of California Berkeley, Xerox Palo Alto Research Center,
  * and Lawrence Berkeley National Lab.
  * October 15, 2003
+ * August 2024
  * </pre>
  */
 #include "slu_@(pre)defs.h"
@@ -324,7 +325,7 @@ at the top-level directory.
  * mem_usage (output) mem_usage_t*
  *         Record the memory usage statistics, consisting of following fields:
  *         - for_lu (float)
- *           The amount of space used in bytes for L\U data structures.
+ *           The amount of space used in bytes for L\\U data structures.
  *         - total_needed (float)
  *           The amount of space needed in bytes to perform factorization.
  *         - expansions (int)

@@ -13,9 +13,10 @@ at the top-level directory.
  * \brief Computes an ILU factorization of a general sparse matrix
  *
  * <pre>
- * -- SuperLU routine (version 4.1) --
+ * -- SuperLU routine (version 7.0.0) --
  * Lawrence Berkeley National Laboratory.
  * June 30, 2009
+ * August 2024
  *
  * </pre>
  */
@@ -197,7 +198,7 @@ void
     int       *iperm_c; /* inverse of perm_c */
     int       *swap, *iswap; /* swap is used to store the row permutation
 				during the factorization. Initially, it is set
-				to iperm_c (row indeces of Pc*A*Pc').
+				to iperm_c (row indices of Pc*A*Pc').
 				iswap is the inverse of swap. After the
 				factorization, it is equal to perm_r. */
     int       *iwork;
@@ -220,7 +221,7 @@ void
     int_t     nzlumax;
     @(mod_type)    *amax; 
     @(type)    drop_sum;
-    @(mod_type) alpha, omega;  /* used in MILU, mimicing DRIC */
+    @(mod_type) alpha, omega;  /* used in MILU, mimicking DRIC */
     @(mod_type)    *@(mod_pre)work2;	   /* used by the second dropping rule */
 
     /* Local scalars */
