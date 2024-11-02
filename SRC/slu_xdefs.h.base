@@ -178,7 +178,7 @@ extern void    @(pre)readmt (int *, int *, int_t *, @(type) **, int_t **, int_t 
 extern void    @(pre)GenXtrue (int, int, @(type) *, int);
 extern void    @(pre)FillRHS (trans_t, int, @(type) *, int, SuperMatrix *,
 			  SuperMatrix *);
-extern void    @(pre)gstrs (trans_t, SuperMatrix *, SuperMatrix *, int *, int *,
+extern void    @(pre)gstrs (trans_t, SuperMatrix *, SuperMatrix *, const int *, const int *,
                         SuperMatrix *, SuperLUStat_t*, int *);
 /* ILU */
 extern void    @(pre)gsitrf (superlu_options_t*, SuperMatrix*, int, int, int*,
@@ -266,7 +266,7 @@ extern void    @(pre)Print_CompCol_Matrix(char *, SuperMatrix *);
 extern void    @(pre)Print_SuperNode_Matrix(char *, SuperMatrix *);
 extern void    @(pre)Print_Dense_Matrix(char *, SuperMatrix *);
 extern void    @(pre)print_lu_col(char *, int, int, int_t *, GlobalLU_t *);
-extern int     print_double_vec(char *, int, double *);
+extern int     print_@(type)_vec(const char *, int, const @(type) *);
 extern void    @(pre)check_tempv(int, @(type) *);
 
 /*! \brief BLAS */

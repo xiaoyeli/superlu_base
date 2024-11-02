@@ -29,7 +29,7 @@ at the top-level directory.
 
 
 /*! \brief Complex Division c = a/b */
-void @(pre)_div(@(type) *c, @(type) *a, @(type) *b)
+void @(pre)_div(@(type) *c, const @(type) *a, const @(type) *b)
 {
     @(mod_type) ratio, den;
     @(mod_type) abr, abi, cr, ci;

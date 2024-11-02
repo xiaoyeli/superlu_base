@@ -68,7 +68,7 @@ extern "C" {
 #endif
 
 /* Prototypes for functions in @(mod_pre)complex.c */
-void @(pre)_div(@(type) *, @(type) *, @(type) *);
+void @(pre)_div(@(type) *, const @(type) *, const @(type) *);
 double @(pre)_abs(@(type) *);     /* exact */
 double @(pre)_abs1(@(type) *);    /* approximate */
 void @(pre)_exp(@(type) *, @(type) *);
