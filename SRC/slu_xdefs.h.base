@@ -259,8 +259,6 @@ extern void    @(pre)readMM(FILE *, int *, int *, int_t *, @(type) **, int_t **,
 extern void    @(pre)fill (@(type) *, int, @(type));
 extern void    @(pre)inf_norm_error (int, SuperMatrix *, @(type) *);
 extern @(mod_type)  @(mod_pre)qselect(int, @(mod_type) *, int);
-extern void    @(pre)parse_command_line(int argc, char *argv[], int_t *lwork,
-                   @(mod_type) *u, yes_no_t *equil, trans_t *trans);
 
 
 /*! \brief Routines for debugging */
