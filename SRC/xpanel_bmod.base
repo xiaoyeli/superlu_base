@@ -158,7 +158,7 @@ void
 		 repfnz_col += m, dense_col += m, TriTmp += ldaTmp ) {
 
 		kfnz = repfnz_col[krep];
-		if ( kfnz == EMPTY ) continue;	/* Skip any zero segment */
+		if ( kfnz == SLU_EMPTY ) continue;	/* Skip any zero segment */
 	    
 		segsze = krep - kfnz + 1;
 		luptr = xlusup[fsupc];
@@ -297,7 +297,7 @@ void
 		     repfnz_col += m, dense_col += m, TriTmp += ldaTmp) {
 		    
 		    kfnz = repfnz_col[krep];
-		    if ( kfnz == EMPTY ) continue; /* Skip any zero segment */
+		    if ( kfnz == SLU_EMPTY ) continue; /* Skip any zero segment */
 		    
 		    segsze = krep - kfnz + 1;
 		    if ( segsze <= 3 ) continue;   /* skip unrolled cases */
@@ -353,7 +353,7 @@ void
 	    for (jj = jcol; jj < jcol + w; jj++,
 		 repfnz_col += m, dense_col += m, TriTmp += ldaTmp) {
 		kfnz = repfnz_col[krep];
-		if ( kfnz == EMPTY ) continue; /* Skip any zero segment */
+		if ( kfnz == SLU_EMPTY ) continue; /* Skip any zero segment */
 		
 		segsze = krep - kfnz + 1;
 		if ( segsze <= 3 ) continue; /* skip unrolled cases */
@@ -377,7 +377,7 @@ void
 		 repfnz_col += m, dense_col += m) {
 		
 		kfnz = repfnz_col[krep];
-		if ( kfnz == EMPTY ) continue;	/* Skip any zero segment */
+		if ( kfnz == SLU_EMPTY ) continue;	/* Skip any zero segment */
 		
 		segsze = krep - kfnz + 1;
 		luptr = xlusup[fsupc];
