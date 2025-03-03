@@ -133,12 +133,12 @@ int
 #else
     extern int i@(pre)amax_(int *, @(type) *, int *);
     extern @(type) @(pre)asum_(int *, @(type) *, int *);
-    extern int @(pre)copy_(int *, @(type) *, int *, @(type) *, int *);
+    extern void @(pre)copy_(int *, @(type) *, int *, @(type) *, int *);
 #endif
 @precision SCOMPLEX DCOMPLEX
     extern int i@(pre)max1_slu(int *, @(type) *, int *);
     extern double @(mod_pre)@(pre)sum1_slu(int *, @(type) *, int *);
-    extern int @(pre)copy_(int *, @(type) *, int *, @(type) *, int *);
+    extern void @(pre)copy_(int *, @(type) *, int *, @(type) *, int *);
 @precision ! 
 @precision SINGLE DOUBLE
 #define d_sign(a, b) (b >= 0 ? fabs(a) : -fabs(a))    /* Copy sign */

@@ -271,14 +271,16 @@ extern void    @(pre)check_tempv(int, @(type) *);
 
 /*! \brief BLAS */
 
-extern int @(pre)gemm_(const char*, const char*, const int*, const int*, const int*,
+extern void @(pre)copy_(int *, @(type) *, int *, @(type) *, int *);
+extern void @(pre)axpy_(int *, @(type) *, @(type) *, int *, @(type) *, int *);
+extern void @(pre)gemm_(const char*, const char*, const int*, const int*, const int*,
                   const @(type)*, const @(type)*, const int*, const @(type)*,
 		  const int*, const @(type)*, @(type)*, const int*);
-extern int @(pre)trsv_(char*, char*, char*, int*, @(type)*, int*,
+extern void @(pre)trsv_(char*, char*, char*, int*, @(type)*, int*,
                   @(type)*, int*);
-extern int @(pre)trsm_(char*, char*, char*, char*, int*, int*,
+extern void @(pre)trsm_(char*, char*, char*, char*, int*, int*,
                   @(type)*, @(type)*, int*, @(type)*, int*);
-extern int @(pre)gemv_(char *, int *, int *, @(type) *, @(type) *a, int *,
+extern void @(pre)gemv_(char *, int *, int *, @(type) *, @(type) *a, int *,
                   @(type) *, int *, @(type) *, @(type) *, int *);
 
 extern void @(pre)usolve(int, int, @(type)*, @(type)*);

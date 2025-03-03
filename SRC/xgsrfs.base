@@ -180,13 +180,6 @@ void
 @precision DCOMPLEX SCOMPLEX
     extern int @(pre)lacon2_(int *, @(type) *, @(type) *, @(mod_type) *, int *, int []);
 @precision !
-#ifdef _CRAY
-    extern int @(SC_PRE)COPY(int *, @(type) *, int *, @(type) *, int *);
-    extern int @(SC_PRE)SAXPY(int *, @(type) *, @(type) *, int *, @(type) *, int *);
-#else
-    extern int @(pre)copy_(int *, @(type) *, int *, @(type) *, int *);
-    extern int @(pre)axpy_(int *, @(type) *, @(type) *, int *, @(type) *, int *);
-#endif
 
     Astore = A->Store;
     Aval   = Astore->nzval;
