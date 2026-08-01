@@ -225,7 +225,7 @@ ilu_@(pre)copy_to_ucol(
 @precision SINGLE DOUBLE
 			*sum += fabs(ucol[i]);
 @precision SCOMPLEX DCOMPLEX
-			sum->r += tmp;
+			sum->r += @(pre)_abs1(&ucol[i]);
 @precision !
 			break;
 		    case SILU:
