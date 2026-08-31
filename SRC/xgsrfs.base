@@ -148,7 +148,7 @@ void
 #define ITMAX 5
     
     /* Table of constant values */
-    int    ione = 1, nrow = A->nrow;
+    slu_blasint    ione = 1, nrow = A->nrow;
 @precision DOUBLE SINGLE
     @(type) ndone = -1.;
     @(type) done = 1.;
@@ -463,7 +463,8 @@ void
 
 @precision DOUBLE SINGLE
 	do {
-	    @(pre)lacon2_(&nrow, &work[A->nrow], work,
+	    int nrow_int = (int)nrow;
+	    @(pre)lacon2_(&nrow_int, &work[A->nrow], work,
 		    &iwork[A->nrow], &ferr[j], &kase, isave);
 	    if (kase == 0) break;
 
@@ -493,7 +494,8 @@ void
 
 @precision DCOMPLEX SCOMPLEX
 	do {
-	    @(pre)lacon2_(&nrow, &work[A->nrow], work, &ferr[j], &kase, isave);
+	    int nrow_int = (int)nrow;
+	    @(pre)lacon2_(&nrow_int, &work[A->nrow], work, &ferr[j], &kase, isave);
 	    if (kase == 0) break;
 
 	    if (kase == 1) {
