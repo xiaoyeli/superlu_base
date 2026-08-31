@@ -23,19 +23,19 @@ at the top-level directory.
 #include <stdlib.h>
 #include "slu_@(pre)defs.h"
 
-extern void @(pre)swap_(int *, @(type) [], int *, @(type) [], int *);
-extern void @(pre)axpy_(int *, @(type) *, @(type) [], int *, @(type) [], int *);
-extern void @(pre)copy_(int *, @(type) [], int *, @(type) [], int *);
+extern void @(pre)swap_(slu_blasint *, @(type) [], slu_blasint *, @(type) [], slu_blasint *);
+extern void @(pre)axpy_(slu_blasint *, @(type) *, @(type) [], slu_blasint *, @(type) [], slu_blasint *);
+extern void @(pre)copy_(slu_blasint *, @(type) [], slu_blasint *, @(type) [], slu_blasint *);
 @precision SINGLE DOUBLE
-extern @(type) @(pre)asum_(int *, @(type) *, int *);
-extern @(type) @(pre)nrm2_(int *, @(type) *, int *);
+extern @(type) @(pre)asum_(slu_blasint *, @(type) *, slu_blasint *);
+extern @(type) @(pre)nrm2_(slu_blasint *, @(type) *, slu_blasint *);
 @precision SCOMPLEX DCOMPLEX
-extern void @(mod_pre)copy_(int *, @(mod_type) [], int *, @(mod_type) [], int *);
-extern @(mod_type) @(mod_pre)@(pre)asum_(int *, @(type) *, int *);
-extern @(mod_type) @(mod_pre)@(pre)nrm2_(int *, @(type) *, int *);
+extern void @(mod_pre)copy_(slu_blasint *, @(mod_type) [], slu_blasint *, @(mod_type) [], slu_blasint *);
+extern @(mod_type) @(mod_pre)@(pre)asum_(slu_blasint *, @(type) *, slu_blasint *);
+extern @(mod_type) @(mod_pre)@(pre)nrm2_(slu_blasint *, @(type) *, slu_blasint *);
 @precision !
-extern double dnrm2_(int *, double [], int *);
-extern int i@(pre)amax_(int *, @(type) [], int *);
+extern double dnrm2_(slu_blasint *, double [], slu_blasint *);
+extern slu_blasint i@(pre)amax_(slu_blasint *, @(type) [], slu_blasint *);
 
 #if 0
 static @(mod_type) *A;  /* used in _compare_ only */
@@ -79,7 +79,7 @@ int ilu_@(pre)drop_row(
     register int i, k, m1;
     register int nzlc; /* number of nonzeros in column last+1 */
     int_t xlusup_first, xlsub_first;
-    int m, n; /* m x n is the size of the supernode */
+    slu_blasint m, n; /* m x n is the size of the supernode */
     int r = 0; /* number of dropped rows */
     register @(mod_type) *temp;
     register @(type) *lusup = (@(type) *) Glu->lusup;
@@ -98,8 +98,8 @@ int ilu_@(pre)drop_row(
     @(type) one = {1.0, 0.0};
     @(type) none = {-1.0, 0.0};
 @precision !
-    int i_1 = 1;
-    int inc_diag; /* inc_diag = m + 1 */
+    slu_blasint i_1 = 1;
+    slu_blasint inc_diag; /* inc_diag = m + 1 */
     int nzp = 0;  /* number of zero pivots */
     @(mod_type) alpha = pow((double)(Glu->n), -1.0 / options->ILU_MILU_Dim);
 
@@ -228,7 +228,7 @@ int ilu_@(pre)drop_row(
 	    }
 	    else /* by quick select */
 	    {
-		int len = m1 - n + 1;
+		slu_blasint len = m1 - n + 1;
 		@(mod_pre)copy_(&len, @(mod_pre)work, &i_1, @(mod_pre)work2, &i_1);
 		tol = @(mod_pre)qselect(len, @(mod_pre)work2, quota - n);
 #if 0

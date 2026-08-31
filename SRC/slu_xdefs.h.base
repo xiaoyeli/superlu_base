@@ -271,17 +271,27 @@ extern void    @(pre)check_tempv(int, @(type) *);
 
 /*! \brief BLAS */
 
-extern void @(pre)copy_(int *, @(type) *, int *, @(type) *, int *);
-extern void @(pre)axpy_(int *, @(type) *, @(type) *, int *, @(type) *, int *);
-extern void @(pre)gemm_(const char*, const char*, const int*, const int*, const int*,
-                  const @(type)*, const @(type)*, const int*, const @(type)*,
-		  const int*, const @(type)*, @(type)*, const int*);
-extern void @(pre)trsv_(char*, char*, char*, int*, @(type)*, int*,
-                  @(type)*, int*);
-extern void @(pre)trsm_(char*, char*, char*, char*, int*, int*,
-                  @(type)*, @(type)*, int*, @(type)*, int*);
-extern void @(pre)gemv_(char *, int *, int *, @(type) *, @(type) *a, int *,
-                  @(type) *, int *, @(type) *, @(type) *, int *);
+#ifndef SLU_BLASINT_TYPE_DEFINED
+#define SLU_BLASINT_TYPE_DEFINED
+/*! \brief Integer type used in the Fortran BLAS/LAPACK calling convention.
+ *  Defaults to `int` (LP64 BLAS); redefine to a 64-bit integer type before
+ *  including this header to link against an ILP64 BLAS/LAPACK. */
+#ifndef slu_blasint
+typedef int slu_blasint;
+#endif
+#endif
+
+extern void @(pre)copy_(slu_blasint *, @(type) *, slu_blasint *, @(type) *, slu_blasint *);
+extern void @(pre)axpy_(slu_blasint *, @(type) *, @(type) *, slu_blasint *, @(type) *, slu_blasint *);
+extern void @(pre)gemm_(const char*, const char*, const slu_blasint*, const slu_blasint*, const slu_blasint*,
+                  const @(type)*, const @(type)*, const slu_blasint*, const @(type)*,
+		  const slu_blasint*, const @(type)*, @(type)*, const slu_blasint*);
+extern void @(pre)trsv_(char*, char*, char*, slu_blasint*, @(type)*, slu_blasint*,
+                  @(type)*, slu_blasint*);
+extern void @(pre)trsm_(char*, char*, char*, char*, slu_blasint*, slu_blasint*,
+                  @(type)*, @(type)*, slu_blasint*, @(type)*, slu_blasint*);
+extern void @(pre)gemv_(char *, slu_blasint *, slu_blasint *, @(type) *, @(type) *a, slu_blasint *,
+                  @(type) *, slu_blasint *, @(type) *, @(type) *, slu_blasint *);
 
 extern void @(pre)usolve(int, int, @(type)*, @(type)*);
 extern void @(pre)lsolve(int, int, @(type)*, @(type)*);

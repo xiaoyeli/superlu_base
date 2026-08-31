@@ -101,11 +101,13 @@ int
 @precision !
 {
     /* Table of constant values */
-    int c__1 = 1;
 @precision SINGLE DOUBLE
+    slu_blasint c__1 = 1;
     @(type)      zero = 0.0;
     @(type)      one = 1.0;
 @precision SCOMPLEX DCOMPLEX
+    slu_blasint c__1 = 1;
+    int c__1_int = 1;  /* for internal _slu functions that take int* */
     @(type)      zero = {0.0, 0.0};
     @(type)      one = {1.0, 0.0};
 
@@ -131,15 +133,16 @@ int
     extern @(type) @(SC_PRE)ASUM(int *, @(type) *, int *);
     extern int @(SC_PRE)COPY(int *, @(type) *, int *, @(type) *, int *);
 #else
-    extern int i@(pre)amax_(int *, @(type) *, int *);
-    extern @(type) @(pre)asum_(int *, @(type) *, int *);
-    extern void @(pre)copy_(int *, @(type) *, int *, @(type) *, int *);
+    extern int i@(pre)amax_(slu_blasint *, @(type) *, slu_blasint *);
+    extern @(type) @(pre)asum_(slu_blasint *, @(type) *, slu_blasint *);
+    extern void @(pre)copy_(slu_blasint *, @(type) *, slu_blasint *, @(type) *, slu_blasint *);
 #endif
 @precision SCOMPLEX DCOMPLEX
     extern int i@(pre)max1_slu(int *, @(type) *, int *);
     extern double @(mod_pre)@(pre)sum1_slu(int *, @(type) *, int *);
-    extern void @(pre)copy_(int *, @(type) *, int *, @(type) *, int *);
-@precision ! 
+    extern void @(pre)copy_(slu_blasint *, @(type) *, slu_blasint *, @(type) *, slu_blasint *);
+@precision !
+    slu_blasint n_blas = *n;
 @precision SINGLE DOUBLE
 #define d_sign(a, b) (b >= 0 ? fabs(a) : -fabs(a))    /* Copy sign */
 #define i_dnnt(a) \
@@ -188,10 +191,10 @@ int
 #ifdef _CRAY
     *est = SASUM(n, x, &c__1);
 #else
-    *est = @(pre)asum_(n, x, &c__1);
+    *est = @(pre)asum_(&n_blas, x, &c__1);
 #endif
 @precision SCOMPLEX DCOMPLEX
-    *est = @(mod_pre)@(pre)sum1_slu(n, x, &c__1);
+    *est = @(mod_pre)@(pre)sum1_slu(n, x, &c__1_int);
 @precision !
 
     for (i = 0; i < *n; ++i) {
@@ -220,10 +223,10 @@ L40:
 #ifdef _CRAY
     isave[1] = ISAMAX(n, &x[0], &c__1);  /* j */
 #else
-    isave[1] = i@(pre)amax_(n, &x[0], &c__1);  /* j */
+    isave[1] = i@(pre)amax_(&n_blas, &x[0], &c__1);  /* j */
 #endif
 @precision SCOMPLEX DCOMPLEX
-    isave[1] = i@(pre)max1_slu(n, &x[0], &c__1);  /* j */
+    isave[1] = i@(pre)max1_slu(n, &x[0], &c__1_int);  /* j */
 @precision !
     --isave[1];  /* --j; */
     isave[2] = 2; /* iter = 2; */
@@ -242,17 +245,17 @@ L70:
 #ifdef _CRAY
     @(SC_PRE)COPY(n, x, &c__1, v, &c__1);
 #else
-    @(pre)copy_(n, x, &c__1, v, &c__1);
+    @(pre)copy_(&n_blas, x, &c__1, v, &c__1);
 #endif
     estold = *est;
 @precision SINGLE DOUBLE
 #ifdef _CRAY
     *est = SASUM(n, v, &c__1);
 #else
-    *est = @(pre)asum_(n, v, &c__1);
+    *est = @(pre)asum_(&n_blas, v, &c__1);
 #endif
 @precision SCOMPLEX DCOMPLEX
-    *est = @(mod_pre)@(pre)sum1_slu(n, v, &c__1);
+    *est = @(mod_pre)@(pre)sum1_slu(n, v, &c__1_int);
 @precision !
 
 @precision SINGLE DOUBLE
@@ -295,10 +298,10 @@ L110:
 #ifdef _CRAY
     isave[1] = ISAMAX(n, &x[0], &c__1);/* j */
 #else
-    isave[1] = i@(pre)amax_(n, &x[0], &c__1);  /* j */
+    isave[1] = i@(pre)amax_(&n_blas, &x[0], &c__1);  /* j */
 #endif
 @precision SCOMPLEX DCOMPLEX
-    isave[1] = i@(pre)max1_slu(n, &x[0], &c__1); /* j */
+    isave[1] = i@(pre)max1_slu(n, &x[0], &c__1_int); /* j */
 @precision !
     isave[1] = isave[1] - 1;  /* --j; */
 @precision SINGLE DOUBLE
@@ -333,16 +336,16 @@ L140:
 #ifdef _CRAY
     temp = SASUM(n, x, &c__1) / (@(mod_type))(*n * 3) * 2.;
 #else
-    temp = @(pre)asum_(n, x, &c__1) / (@(mod_type))(*n * 3) * 2.;
+    temp = @(pre)asum_(&n_blas, x, &c__1) / (@(mod_type))(*n * 3) * 2.;
 #endif
 @precision SCOMPLEX DCOMPLEX
-    temp = @(mod_pre)@(pre)sum1_slu(n, x, &c__1) / (@(mod_type))(*n * 3) * 2.;
+    temp = @(mod_pre)@(pre)sum1_slu(n, x, &c__1_int) / (@(mod_type))(*n * 3) * 2.;
 @precision !
     if (temp > *est) {
 #ifdef _CRAY
 	@(SC_PRE)COPY(n, &x[0], &c__1, &v[0], &c__1);
 #else
-	@(pre)copy_(n, &x[0], &c__1, &v[0], &c__1);
+	@(pre)copy_(&n_blas, &x[0], &c__1, &v[0], &c__1);
 #endif
 	*est = temp;
     }
