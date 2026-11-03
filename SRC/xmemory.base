@@ -246,6 +246,7 @@ int_t
 	    xusub  = @(pre)user_malloc((n+1) * liword, HEAD, Glu);
 	}
 
+        /* Memory layout in work[] array: [ LUSUP || UCOL || LSUB || USUB ] */
 	lusup = (@(type) *) @(pre)expand( &nzlumax, LUSUP, 0, 0, Glu );
 	ucol  = (@(type) *) @(pre)expand( &nzumax, UCOL, 0, 0, Glu );
 	lsub  = (int_t *) @(pre)expand( &nzlmax, LSUB, 0, 0, Glu );
@@ -439,8 +440,9 @@ int_t
 	   MemType mem_type,  /* which type of memory to expand  */
 	   int_t *maxlen,       /* modified - maximum length of a data structure */
 	   GlobalLU_t *Glu    /* modified - global LU data structures */
-	   )
-{
+
+)
+
     void   *new_mem;
     
 #if ( DEBUGlevel>=1 ) 
