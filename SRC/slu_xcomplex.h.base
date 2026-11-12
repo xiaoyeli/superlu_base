@@ -21,8 +21,8 @@ at the top-level directory.
  * This header file is to be included in source files @(pre)*.c
  * </pre>
  */
-#ifndef __SUPERLU_@(MOD_PRE)COMPLEX /* allow multiple inclusions */
-#define __SUPERLU_@(MOD_PRE)COMPLEX
+#ifndef SUPERLU_@(MOD_PRE)COMPLEX_H /* allow multiple inclusions */
+#define SUPERLU_@(MOD_PRE)COMPLEX_H
 
 
 #ifndef @(MOD_PRE)COMPLEX_INCLUDE
@@ -97,4 +97,4 @@ int @(pre)_eq(@(type) *, @(type) *);
 
 #endif
 
-#endif  /* __SUPERLU_@(MOD_PRE)COMPLEX */
+#endif  /* SUPERLU_@(MOD_PRE)COMPLEX_H */

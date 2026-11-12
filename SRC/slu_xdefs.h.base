@@ -71,8 +71,8 @@ at the top-level directory.
  *	Storage: new row subscripts; that is subscripts of PA.
  * </pre>
  */
-#ifndef __SUPERLU_@(pre)SP_DEFS /* allow multiple inclusions */
-#define __SUPERLU_@(pre)SP_DEFS
+#ifndef SUPERLU_@(pre)SP_DEFS_H /* allow multiple inclusions */
+#define SUPERLU_@(pre)SP_DEFS_H
 
 /*
  * File name:		@(pre)sp_defs.h
@@ -291,5 +291,5 @@ extern void @(pre)matvec(int, int, int, @(type)*, @(type)*, @(type)*);
   }
 #endif
 
-#endif /* __SUPERLU_@(pre)SP_DEFS */
+#endif /* SUPERLU_@(pre)SP_DEFS_H */
 
